@@ -1,0 +1,153 @@
+.practice-entry,
+.practice-coach {
+  border: 1px solid var(--border);
+  border-left: 4px solid #c65236;
+  background: var(--card);
+  color: var(--foreground);
+  padding: 16px;
+  margin: 12px 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.practice-entry h2,
+.practice-coach h2 {
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.practice-entry p,
+.practice-note {
+  color: var(--muted-foreground);
+  margin: 8px 0;
+}
+.practice-entry label {
+  display: block;
+  max-width: 520px;
+  margin-top: 12px;
+}
+.practice-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+.practice-coach > header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.practice-coach > header > button {
+  margin-left: auto;
+}
+.practice-navigation {
+  display: flex;
+  gap: 8px;
+  align-items: end;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.practice-navigation label {
+  flex: 1;
+  min-width: 160px;
+  max-width: 500px;
+}
+.practice-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-height: 310px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 8px 6px 6px 0;
+}
+.practice-content h3,
+.practice-finish h3 {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.practice-content ol,
+.practice-finish ol {
+  list-style: decimal;
+  padding-left: 20px;
+}
+.practice-content p {
+  margin: 8px 0;
+  white-space: pre-line;
+}
+.practice-checks {
+  display: grid;
+  gap: 4px;
+}
+.practice-checks li {
+  display: flex;
+  gap: 7px;
+  color: var(--muted-foreground);
+}
+.practice-checks li[data-passed="true"] {
+  color: #237343;
+}
+.practice-result {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+.practice-content details {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  margin-top: 10px;
+}
+.practice-content details summary {
+  cursor: pointer;
+}
+.practice-content details ul,
+.practice-required ul {
+  list-style: disc;
+  padding-left: 18px;
+}
+.practice-sample {
+  padding: 8px;
+  background: var(--muted);
+  overflow-wrap: anywhere;
+}
+.practice-outline {
+  position: absolute;
+  pointer-events: none;
+  border: 2px dashed #c98316;
+  z-index: 35;
+  background: rgb(255 204 80 / 5%);
+}
+.practice-outline-label {
+  position: absolute;
+  top: -21px;
+  left: 0;
+  color: #69400a;
+  background: #fff2cc;
+  white-space: nowrap;
+  padding: 1px 5px;
+  font-size: 11px;
+}
+@media (max-width: 760px) {
+  .practice-content {
+    grid-template-columns: 1fr;
+    max-height: 270px;
+  }
+  .practice-entry,
+  .practice-coach {
+    padding: 12px;
+  }
+  .practice-coach > header {
+    gap: 8px;
+  }
+}
+@media print {
+  .practice-entry,
+  .practice-coach,
+  .practice-outline {
+    display: none !important;
+  }
+}

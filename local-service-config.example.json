@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "port": 4317,
+  "dataFolder": "..\\FormdigitalData",
+  "token": "GENERATED_BY_setup-local-service.mjs",
+  "allowedOrigins": [
+    "http://localhost:3000"
+  ]
+}

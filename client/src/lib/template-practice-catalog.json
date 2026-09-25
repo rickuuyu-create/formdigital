@@ -1,0 +1,2519 @@
+[
+  {
+    "id": "A01",
+    "page": 1,
+    "type": "text",
+    "title": ["申請人姓名 *", "Applicant name"],
+    "settings": {
+      "required": true,
+      "maxLength": 20
+    },
+    "sample": "陳曉晴",
+    "box": {
+      "x": 16,
+      "y": 77,
+      "width": 86,
+      "height": 10
+    }
+  },
+  {
+    "id": "A02",
+    "page": 1,
+    "type": "text",
+    "title": ["英文姓名", "English name"],
+    "settings": {
+      "inputMode": "text"
+    },
+    "sample": "Jamie Chan",
+    "box": {
+      "x": 108,
+      "y": 77,
+      "width": 86,
+      "height": 10
+    }
+  },
+  {
+    "id": "A03",
+    "page": 1,
+    "type": "text",
+    "title": ["聯絡電郵 *", "Email"],
+    "settings": {
+      "required": true,
+      "validation": "email"
+    },
+    "sample": "learner@example.com",
+    "box": {
+      "x": 16,
+      "y": 104,
+      "width": 86,
+      "height": 10
+    }
+  },
+  {
+    "id": "A04",
+    "page": 1,
+    "type": "text",
+    "title": ["聯絡電話", "Phone"],
+    "settings": {
+      "validation": "phone"
+    },
+    "sample": "+852 5555 0101",
+    "box": {
+      "x": 108,
+      "y": 104,
+      "width": 86,
+      "height": 10
+    }
+  },
+  {
+    "id": "A05",
+    "page": 1,
+    "type": "text",
+    "title": ["申請編號 *", "Application number"],
+    "settings": {
+      "required": true,
+      "validation": "regex",
+      "regex": "^FD-[0-9]{4}-[0-9]{3}$"
+    },
+    "sample": "FD-2026-001",
+    "box": {
+      "x": 16,
+      "y": 131,
+      "width": 86,
+      "height": 10
+    }
+  },
+  {
+    "id": "A06",
+    "page": 1,
+    "type": "number",
+    "title": ["參與人數", "Participants"],
+    "settings": {
+      "min": 1,
+      "max": 120
+    },
+    "sample": "30",
+    "box": {
+      "x": 108,
+      "y": 131,
+      "width": 40,
+      "height": 10
+    }
+  },
+  {
+    "id": "A07",
+    "page": 1,
+    "type": "number",
+    "title": ["預算上限", "Budget"],
+    "settings": {
+      "min": 0,
+      "max": 50000,
+      "align": "right"
+    },
+    "sample": "8000.50",
+    "box": {
+      "x": 154,
+      "y": 131,
+      "width": 40,
+      "height": 10
+    }
+  },
+  {
+    "id": "A08",
+    "page": 1,
+    "type": "date",
+    "title": ["申請日期", "Application date"],
+    "settings": {
+      "dynamicDefault": "today",
+      "dateFormat": "yyyy-mm-dd"
+    },
+    "sample": "",
+    "box": {
+      "x": 16,
+      "y": 175,
+      "width": 56,
+      "height": 10
+    }
+  },
+  {
+    "id": "A09",
+    "page": 1,
+    "type": "date",
+    "title": ["活動日期", "Event date"],
+    "settings": {
+      "dateFormat": "dd-mm-yyyy"
+    },
+    "sample": "2026-10-15",
+    "box": {
+      "x": 77,
+      "y": 175,
+      "width": 56,
+      "height": 10
+    }
+  },
+  {
+    "id": "A10",
+    "page": 1,
+    "type": "date",
+    "title": ["覆核日期", "Review date"],
+    "settings": {
+      "dateFormat": "mm-dd-yyyy"
+    },
+    "sample": "2026-10-15",
+    "box": {
+      "x": 138,
+      "y": 175,
+      "width": 56,
+      "height": 10
+    }
+  },
+  {
+    "id": "A11",
+    "page": 1,
+    "type": "time",
+    "title": ["登記時間", "Registration time"],
+    "settings": {
+      "dynamicDefault": "now",
+      "timeFormat": "hh:mm"
+    },
+    "sample": "",
+    "box": {
+      "x": 16,
+      "y": 202,
+      "width": 86,
+      "height": 10
+    }
+  },
+  {
+    "id": "A12",
+    "page": 1,
+    "type": "time",
+    "title": ["集合時間", "Meeting time"],
+    "settings": {
+      "timeFormat": "hhmm"
+    },
+    "sample": "14:30",
+    "box": {
+      "x": 108,
+      "y": 202,
+      "width": 86,
+      "height": 10
+    }
+  },
+  {
+    "id": "B01",
+    "page": 2,
+    "type": "radio",
+    "title": ["活動方案：只能圈選一項 *", "Single circle choice"],
+    "settings": {
+      "options": ["A", "B", "C", "D", "E", "F"],
+      "markStyle": "circle",
+      "required": true
+    },
+    "sample": "C → F",
+    "box": {
+      "x": 20.0,
+      "y": 81,
+      "width": 157.33333333333334,
+      "height": 9
+    },
+    "marks": [
+      {
+        "option": "A",
+        "xRatio": 0.0,
+        "yRatio": 0.0,
+        "widthRatio": 0.05720338983050847,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "B",
+        "xRatio": 0.18855932203389833,
+        "yRatio": 0.0,
+        "widthRatio": 0.05720338983050847,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "C",
+        "xRatio": 0.37711864406779666,
+        "yRatio": 0.0,
+        "widthRatio": 0.05720338983050847,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "D",
+        "xRatio": 0.5656779661016949,
+        "yRatio": 0.0,
+        "widthRatio": 0.05720338983050847,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "E",
+        "xRatio": 0.7542372881355933,
+        "yRatio": 0.0,
+        "widthRatio": 0.05720338983050847,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "F",
+        "xRatio": 0.9427966101694916,
+        "yRatio": 0.0,
+        "widthRatio": 0.05720338983050847,
+        "heightRatio": 1.0
+      }
+    ]
+  },
+  {
+    "id": "B02",
+    "page": 2,
+    "type": "checkbox",
+    "title": ["需要的支援：可圈選多項", "Multiple circle choices"],
+    "settings": {
+      "options": ["投影", "音響", "桌椅", "交通", "餐飲", "攝影"],
+      "markStyle": "circle"
+    },
+    "sample": "投影 + 桌椅 + 攝影 → 投影 + 攝影",
+    "box": {
+      "x": 20.0,
+      "y": 119,
+      "width": 131.66666666666669,
+      "height": 22
+    },
+    "marks": [
+      {
+        "option": "投影",
+        "xRatio": 0.0,
+        "yRatio": 0.0,
+        "widthRatio": 0.09873417721518986,
+        "heightRatio": 0.4090909090909091
+      },
+      {
+        "option": "音響",
+        "xRatio": 0.4506329113924051,
+        "yRatio": 0.0,
+        "widthRatio": 0.09873417721518986,
+        "heightRatio": 0.4090909090909091
+      },
+      {
+        "option": "桌椅",
+        "xRatio": 0.9012658227848102,
+        "yRatio": 0.0,
+        "widthRatio": 0.09873417721518986,
+        "heightRatio": 0.4090909090909091
+      },
+      {
+        "option": "交通",
+        "xRatio": 0.0,
+        "yRatio": 0.5909090909090909,
+        "widthRatio": 0.09873417721518986,
+        "heightRatio": 0.4090909090909091
+      },
+      {
+        "option": "餐飲",
+        "xRatio": 0.4506329113924051,
+        "yRatio": 0.5909090909090909,
+        "widthRatio": 0.09873417721518986,
+        "heightRatio": 0.4090909090909091
+      },
+      {
+        "option": "攝影",
+        "xRatio": 0.9012658227848102,
+        "yRatio": 0.5909090909090909,
+        "widthRatio": 0.09873417721518986,
+        "heightRatio": 0.4090909090909091
+      }
+    ]
+  },
+  {
+    "id": "B03",
+    "page": 2,
+    "type": "radio",
+    "title": ["通知方式：單選、實心點", "Single dot choice"],
+    "settings": {
+      "options": ["電郵", "電話", "短訊"],
+      "markStyle": "dot"
+    },
+    "sample": "電郵",
+    "box": {
+      "x": 19.0,
+      "y": 190,
+      "width": 123.16666666666669,
+      "height": 4.5
+    },
+    "marks": [
+      {
+        "option": "電郵",
+        "xRatio": 0.0,
+        "yRatio": 0.0,
+        "widthRatio": 0.03653585926928281,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "電話",
+        "xRatio": 0.4817320703653586,
+        "yRatio": 0.0,
+        "widthRatio": 0.03653585926928281,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "短訊",
+        "xRatio": 0.9634641407307172,
+        "yRatio": 0.0,
+        "widthRatio": 0.03653585926928281,
+        "heightRatio": 1.0
+      }
+    ]
+  },
+  {
+    "id": "B04",
+    "page": 2,
+    "type": "checkbox",
+    "title": ["已備文件：多選、剔號", "Tick choices"],
+    "settings": {
+      "options": ["活動計劃", "報價單", "場地確認"],
+      "markStyle": "check"
+    },
+    "sample": "活動計劃 + 報價單",
+    "box": {
+      "x": 19.0,
+      "y": 218,
+      "width": 123.16666666666669,
+      "height": 4.5
+    },
+    "marks": [
+      {
+        "option": "活動計劃",
+        "xRatio": 0.0,
+        "yRatio": 0.0,
+        "widthRatio": 0.03653585926928281,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "報價單",
+        "xRatio": 0.4817320703653586,
+        "yRatio": 0.0,
+        "widthRatio": 0.03653585926928281,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "場地確認",
+        "xRatio": 0.9634641407307172,
+        "yRatio": 0.0,
+        "widthRatio": 0.03653585926928281,
+        "heightRatio": 1.0
+      }
+    ]
+  },
+  {
+    "id": "B05",
+    "page": 2,
+    "type": "checkbox",
+    "title": ["不用的服務：多選、交叉", "Cross choices"],
+    "settings": {
+      "options": ["接送", "茶點", "印刷"],
+      "markStyle": "cross"
+    },
+    "sample": "接送 + 印刷",
+    "box": {
+      "x": 19.0,
+      "y": 246,
+      "width": 123.16666666666669,
+      "height": 4.5
+    },
+    "marks": [
+      {
+        "option": "接送",
+        "xRatio": 0.0,
+        "yRatio": 0.0,
+        "widthRatio": 0.03653585926928281,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "茶點",
+        "xRatio": 0.4817320703653586,
+        "yRatio": 0.0,
+        "widthRatio": 0.03653585926928281,
+        "heightRatio": 1.0
+      },
+      {
+        "option": "印刷",
+        "xRatio": 0.9634641407307172,
+        "yRatio": 0.0,
+        "widthRatio": 0.03653585926928281,
+        "heightRatio": 1.0
+      }
+    ]
+  },
+  {
+    "id": "B06",
+    "page": 2,
+    "type": "select",
+    "title": ["申請部門", "Department dropdown"],
+    "settings": {
+      "options": ["行政", "活動", "財務"]
+    },
+    "sample": "行政",
+    "box": {
+      "x": 16,
+      "y": 264,
+      "width": 68,
+      "height": 9
+    }
+  },
+  {
+    "id": "B07",
+    "page": 2,
+    "type": "checkbox",
+    "title": ["我已核對資料", "Independent checkbox"],
+    "settings": {
+      "options": [],
+      "markStyle": "check"
+    },
+    "sample": "✓ → 空白",
+    "box": {
+      "x": 100,
+      "y": 265,
+      "width": 4.5,
+      "height": 4.5
+    }
+  },
+  {
+    "id": "C01",
+    "page": 3,
+    "type": "characterBox",
+    "title": ["八格識別碼", "Eight character boxes"],
+    "settings": {
+      "boxCount": 8,
+      "maxLength": 8,
+      "inputMode": "any"
+    },
+    "sample": "AB202601",
+    "box": {
+      "x": 16,
+      "y": 78,
+      "width": 72,
+      "height": 11
+    }
+  },
+  {
+    "id": "C02",
+    "page": 3,
+    "type": "characterBox",
+    "title": ["分段日期", "Segmented date"],
+    "settings": {
+      "boxCount": 8,
+      "maxLength": 8,
+      "inputMode": "number",
+      "segmentCapacities": [2, 2, 4]
+    },
+    "sample": "25092026",
+    "box": {
+      "x": 108,
+      "y": 78,
+      "width": 78,
+      "height": 11
+    },
+    "segments": [
+      {
+        "xRatio": 0.0,
+        "yRatio": 0,
+        "widthRatio": 0.10256410256410256,
+        "heightRatio": 1
+      },
+      {
+        "xRatio": 0.10256410256410256,
+        "yRatio": 0,
+        "widthRatio": 0.10256410256410256,
+        "heightRatio": 1
+      },
+      {
+        "xRatio": 0.2948717948717949,
+        "yRatio": 0,
+        "widthRatio": 0.10256410256410256,
+        "heightRatio": 1
+      },
+      {
+        "xRatio": 0.3974358974358974,
+        "yRatio": 0,
+        "widthRatio": 0.10256410256410256,
+        "heightRatio": 1
+      },
+      {
+        "xRatio": 0.5897435897435898,
+        "yRatio": 0,
+        "widthRatio": 0.10256410256410256,
+        "heightRatio": 1
+      },
+      {
+        "xRatio": 0.6923076923076923,
+        "yRatio": 0,
+        "widthRatio": 0.10256410256410256,
+        "heightRatio": 1
+      },
+      {
+        "xRatio": 0.7948717948717948,
+        "yRatio": 0,
+        "widthRatio": 0.10256410256410256,
+        "heightRatio": 1
+      },
+      {
+        "xRatio": 0.8974358974358975,
+        "yRatio": 0,
+        "widthRatio": 0.10256410256410256,
+        "heightRatio": 1
+      }
+    ]
+  },
+  {
+    "id": "C03",
+    "page": 3,
+    "type": "text",
+    "title": ["短代碼：禁止超限", "Block overflow"],
+    "settings": {
+      "maxLength": 8,
+      "overflow": "block"
+    },
+    "sample": "DEMO2026",
+    "box": {
+      "x": 16,
+      "y": 125,
+      "width": 86,
+      "height": 10
+    }
+  },
+  {
+    "id": "C04",
+    "page": 3,
+    "type": "text",
+    "title": ["長標題：自動縮小", "Shrink long title"],
+    "settings": {
+      "overflow": "shrink"
+    },
+    "sample": "晨光社區跨代文化交流與學習活動",
+    "box": {
+      "x": 108,
+      "y": 125,
+      "width": 86,
+      "height": 10
+    }
+  },
+  {
+    "id": "C05",
+    "page": 3,
+    "type": "text",
+    "title": ["簡短備註：警告但允許", "Warn on overflow"],
+    "settings": {
+      "overflow": "warn"
+    },
+    "sample": "這是一段用來檢查文字框容量的較長備註",
+    "box": {
+      "x": 16,
+      "y": 152,
+      "width": 86,
+      "height": 10
+    }
+  },
+  {
+    "id": "C06",
+    "page": 3,
+    "type": "textarea",
+    "title": ["活動目的：多行換行", "Multiline purpose"],
+    "settings": {
+      "overflow": "wrap",
+      "lineHeightPt": 14
+    },
+    "sample": "認識數碼表格\n練習人工對位\n檢查每頁輸出",
+    "box": {
+      "x": 108,
+      "y": 152,
+      "width": 86,
+      "height": 21
+    }
+  },
+  {
+    "id": "C07",
+    "page": 3,
+    "type": "text",
+    "title": ["靠左／粗體", "Left and bold"],
+    "settings": {
+      "align": "left",
+      "bold": true
+    },
+    "sample": "示範文字 Demo",
+    "box": {
+      "x": 16,
+      "y": 205,
+      "width": 56,
+      "height": 11
+    }
+  },
+  {
+    "id": "C08",
+    "page": 3,
+    "type": "text",
+    "title": ["置中／斜體", "Center and italic"],
+    "settings": {
+      "align": "center",
+      "italic": true
+    },
+    "sample": "示範文字 Demo",
+    "box": {
+      "x": 77,
+      "y": 205,
+      "width": 56,
+      "height": 11
+    }
+  },
+  {
+    "id": "C09",
+    "page": 3,
+    "type": "text",
+    "title": ["靠右／底線", "Right and underline"],
+    "settings": {
+      "align": "right",
+      "underline": true
+    },
+    "sample": "示範文字 Demo",
+    "box": {
+      "x": 138,
+      "y": 205,
+      "width": 56,
+      "height": 11
+    }
+  },
+  {
+    "id": "C10",
+    "page": 3,
+    "type": "text",
+    "title": ["主辦單位（固定預設）", "Fixed default"],
+    "settings": {
+      "defaultValue": "晨光社區學習中心"
+    },
+    "sample": "晨光社區學習中心",
+    "box": {
+      "x": 16,
+      "y": 235,
+      "width": 86,
+      "height": 13
+    }
+  },
+  {
+    "id": "C11",
+    "page": 3,
+    "type": "text",
+    "title": ["常用地點", "Saved venue"],
+    "settings": {},
+    "sample": "活動室 A",
+    "box": {
+      "x": 108,
+      "y": 235,
+      "width": 86,
+      "height": 13
+    }
+  },
+  {
+    "id": "D01",
+    "page": 4,
+    "type": "table",
+    "title": ["採購明細", "Purchase table"],
+    "settings": {
+      "maxRows": 6,
+      "tableColumns": 7,
+      "tableWritableCells": [
+        {
+          "row": 0,
+          "column": 0
+        },
+        {
+          "row": 0,
+          "column": 1
+        },
+        {
+          "row": 0,
+          "column": 2
+        },
+        {
+          "row": 0,
+          "column": 4
+        },
+        {
+          "row": 1,
+          "column": 0
+        },
+        {
+          "row": 1,
+          "column": 1
+        },
+        {
+          "row": 1,
+          "column": 2
+        },
+        {
+          "row": 1,
+          "column": 4
+        },
+        {
+          "row": 2,
+          "column": 0
+        },
+        {
+          "row": 2,
+          "column": 1
+        },
+        {
+          "row": 2,
+          "column": 2
+        },
+        {
+          "row": 2,
+          "column": 4
+        },
+        {
+          "row": 3,
+          "column": 0
+        },
+        {
+          "row": 3,
+          "column": 1
+        },
+        {
+          "row": 3,
+          "column": 2
+        },
+        {
+          "row": 3,
+          "column": 4
+        },
+        {
+          "row": 4,
+          "column": 0
+        },
+        {
+          "row": 4,
+          "column": 1
+        },
+        {
+          "row": 4,
+          "column": 2
+        },
+        {
+          "row": 4,
+          "column": 4
+        }
+      ],
+      "tableFormulaCells": [
+        {
+          "row": 0,
+          "column": 3,
+          "expression": "B*C",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 0,
+          "column": 5,
+          "expression": "D-E",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 0,
+          "column": 6,
+          "expression": "F*10/100",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 1,
+          "column": 3,
+          "expression": "B*C",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 1,
+          "column": 5,
+          "expression": "D-E",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 1,
+          "column": 6,
+          "expression": "F*10/100",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 2,
+          "column": 3,
+          "expression": "B*C",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 2,
+          "column": 5,
+          "expression": "D-E",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 2,
+          "column": 6,
+          "expression": "F*10/100",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 3,
+          "column": 3,
+          "expression": "B*C",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 3,
+          "column": 5,
+          "expression": "D-E",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 3,
+          "column": 6,
+          "expression": "F*10/100",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 4,
+          "column": 3,
+          "expression": "B*C",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 4,
+          "column": 5,
+          "expression": "D-E",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 4,
+          "column": 6,
+          "expression": "F*10/100",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 5,
+          "column": 3,
+          "expression": "SUM(D1:D5)",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 5,
+          "column": 5,
+          "expression": "SUM(F1:F5)",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 5,
+          "column": 6,
+          "expression": "SUM(G1:G5)",
+          "decimalPlaces": 2
+        }
+      ],
+      "tableFormulaSchemaVersion": 2
+    },
+    "sample": "",
+    "box": {
+      "x": 16,
+      "y": 82,
+      "width": 178,
+      "height": 84
+    },
+    "widths": [44, 18, 24, 24, 20, 24, 24],
+    "heights": [14, 14, 14, 14, 14, 14],
+    "cells": [
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.0,
+        "widthRatio": 0.24719101123595505,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.24719101123595505,
+        "yRatio": 0.0,
+        "widthRatio": 0.10112359550561797,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.34831460674157305,
+        "yRatio": 0.0,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.48314606741573035,
+        "yRatio": 0.0,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.6179775280898876,
+        "yRatio": 0.0,
+        "widthRatio": 0.11235955056179775,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.7303370786516854,
+        "yRatio": 0.0,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.8651685393258427,
+        "yRatio": 0.0,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.24719101123595505,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.24719101123595505,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.10112359550561797,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.34831460674157305,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.48314606741573035,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.6179775280898876,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.11235955056179775,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.7303370786516854,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.8651685393258427,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.24719101123595505,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.24719101123595505,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.10112359550561797,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.34831460674157305,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.48314606741573035,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.6179775280898876,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.11235955056179775,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.7303370786516854,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.8651685393258427,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.5,
+        "widthRatio": 0.24719101123595505,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.24719101123595505,
+        "yRatio": 0.5,
+        "widthRatio": 0.10112359550561797,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.34831460674157305,
+        "yRatio": 0.5,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.48314606741573035,
+        "yRatio": 0.5,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.6179775280898876,
+        "yRatio": 0.5,
+        "widthRatio": 0.11235955056179775,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.7303370786516854,
+        "yRatio": 0.5,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.8651685393258427,
+        "yRatio": 0.5,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.24719101123595505,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.24719101123595505,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.10112359550561797,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.34831460674157305,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.48314606741573035,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.6179775280898876,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.11235955056179775,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.7303370786516854,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.8651685393258427,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.24719101123595505,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.24719101123595505,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.10112359550561797,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.34831460674157305,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.48314606741573035,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.6179775280898876,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.11235955056179775,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.7303370786516854,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      },
+      {
+        "xRatio": 0.8651685393258427,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.1348314606741573,
+        "heightRatio": 0.16666666666666666
+      }
+    ]
+  },
+  {
+    "id": "D02",
+    "page": 4,
+    "type": "table",
+    "title": ["跟進記錄", "Uneven follow-up grid"],
+    "settings": {
+      "maxRows": 3,
+      "tableColumns": 3,
+      "tableWritableCells": [
+        {
+          "row": 0,
+          "column": 0
+        },
+        {
+          "row": 0,
+          "column": 1
+        },
+        {
+          "row": 0,
+          "column": 2
+        },
+        {
+          "row": 1,
+          "column": 0
+        },
+        {
+          "row": 1,
+          "column": 1
+        },
+        {
+          "row": 1,
+          "column": 2
+        },
+        {
+          "row": 2,
+          "column": 0
+        },
+        {
+          "row": 2,
+          "column": 1
+        },
+        {
+          "row": 2,
+          "column": 2
+        }
+      ],
+      "tableFormulaCells": []
+    },
+    "sample": "",
+    "box": {
+      "x": 16,
+      "y": 216,
+      "width": 178,
+      "height": 50
+    },
+    "widths": [82, 36, 60],
+    "heights": [12, 16, 22],
+    "cells": [
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.0,
+        "widthRatio": 0.4606741573033708,
+        "heightRatio": 0.24
+      },
+      {
+        "xRatio": 0.4606741573033708,
+        "yRatio": 0.0,
+        "widthRatio": 0.20224719101123595,
+        "heightRatio": 0.24
+      },
+      {
+        "xRatio": 0.6629213483146067,
+        "yRatio": 0.0,
+        "widthRatio": 0.33707865168539325,
+        "heightRatio": 0.24
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.24,
+        "widthRatio": 0.4606741573033708,
+        "heightRatio": 0.32
+      },
+      {
+        "xRatio": 0.4606741573033708,
+        "yRatio": 0.24,
+        "widthRatio": 0.20224719101123595,
+        "heightRatio": 0.32
+      },
+      {
+        "xRatio": 0.6629213483146067,
+        "yRatio": 0.24,
+        "widthRatio": 0.33707865168539325,
+        "heightRatio": 0.32
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.56,
+        "widthRatio": 0.4606741573033708,
+        "heightRatio": 0.44
+      },
+      {
+        "xRatio": 0.4606741573033708,
+        "yRatio": 0.56,
+        "widthRatio": 0.20224719101123595,
+        "heightRatio": 0.44
+      },
+      {
+        "xRatio": 0.6629213483146067,
+        "yRatio": 0.56,
+        "widthRatio": 0.33707865168539325,
+        "heightRatio": 0.44
+      }
+    ]
+  },
+  {
+    "id": "E01",
+    "page": 5,
+    "type": "table",
+    "title": ["工作人員及出席記錄", "72-cell attendance table"],
+    "settings": {
+      "maxRows": 12,
+      "tableColumns": 6,
+      "tableWritableCells": [
+        {
+          "row": 0,
+          "column": 0
+        },
+        {
+          "row": 0,
+          "column": 1
+        },
+        {
+          "row": 0,
+          "column": 2
+        },
+        {
+          "row": 0,
+          "column": 3
+        },
+        {
+          "row": 0,
+          "column": 4
+        },
+        {
+          "row": 0,
+          "column": 5
+        },
+        {
+          "row": 1,
+          "column": 0
+        },
+        {
+          "row": 1,
+          "column": 1
+        },
+        {
+          "row": 1,
+          "column": 2
+        },
+        {
+          "row": 1,
+          "column": 3
+        },
+        {
+          "row": 1,
+          "column": 4
+        },
+        {
+          "row": 1,
+          "column": 5
+        },
+        {
+          "row": 2,
+          "column": 0
+        },
+        {
+          "row": 2,
+          "column": 1
+        },
+        {
+          "row": 2,
+          "column": 2
+        },
+        {
+          "row": 2,
+          "column": 3
+        },
+        {
+          "row": 2,
+          "column": 4
+        },
+        {
+          "row": 2,
+          "column": 5
+        },
+        {
+          "row": 3,
+          "column": 0
+        },
+        {
+          "row": 3,
+          "column": 1
+        },
+        {
+          "row": 3,
+          "column": 2
+        },
+        {
+          "row": 3,
+          "column": 3
+        },
+        {
+          "row": 3,
+          "column": 4
+        },
+        {
+          "row": 3,
+          "column": 5
+        },
+        {
+          "row": 4,
+          "column": 0
+        },
+        {
+          "row": 4,
+          "column": 1
+        },
+        {
+          "row": 4,
+          "column": 2
+        },
+        {
+          "row": 4,
+          "column": 3
+        },
+        {
+          "row": 4,
+          "column": 4
+        },
+        {
+          "row": 4,
+          "column": 5
+        },
+        {
+          "row": 5,
+          "column": 0
+        },
+        {
+          "row": 5,
+          "column": 1
+        },
+        {
+          "row": 5,
+          "column": 2
+        },
+        {
+          "row": 5,
+          "column": 3
+        },
+        {
+          "row": 5,
+          "column": 4
+        },
+        {
+          "row": 5,
+          "column": 5
+        },
+        {
+          "row": 6,
+          "column": 0
+        },
+        {
+          "row": 6,
+          "column": 1
+        },
+        {
+          "row": 6,
+          "column": 2
+        },
+        {
+          "row": 6,
+          "column": 3
+        },
+        {
+          "row": 6,
+          "column": 4
+        },
+        {
+          "row": 6,
+          "column": 5
+        },
+        {
+          "row": 7,
+          "column": 0
+        },
+        {
+          "row": 7,
+          "column": 1
+        },
+        {
+          "row": 7,
+          "column": 2
+        },
+        {
+          "row": 7,
+          "column": 3
+        },
+        {
+          "row": 7,
+          "column": 4
+        },
+        {
+          "row": 7,
+          "column": 5
+        },
+        {
+          "row": 8,
+          "column": 0
+        },
+        {
+          "row": 8,
+          "column": 1
+        },
+        {
+          "row": 8,
+          "column": 2
+        },
+        {
+          "row": 8,
+          "column": 3
+        },
+        {
+          "row": 8,
+          "column": 4
+        },
+        {
+          "row": 8,
+          "column": 5
+        },
+        {
+          "row": 9,
+          "column": 0
+        },
+        {
+          "row": 9,
+          "column": 1
+        },
+        {
+          "row": 9,
+          "column": 2
+        },
+        {
+          "row": 9,
+          "column": 3
+        },
+        {
+          "row": 9,
+          "column": 4
+        },
+        {
+          "row": 9,
+          "column": 5
+        },
+        {
+          "row": 10,
+          "column": 0
+        },
+        {
+          "row": 10,
+          "column": 1
+        },
+        {
+          "row": 10,
+          "column": 2
+        },
+        {
+          "row": 10,
+          "column": 3
+        },
+        {
+          "row": 10,
+          "column": 4
+        },
+        {
+          "row": 10,
+          "column": 5
+        },
+        {
+          "row": 11,
+          "column": 0
+        },
+        {
+          "row": 11,
+          "column": 1
+        },
+        {
+          "row": 11,
+          "column": 2
+        },
+        {
+          "row": 11,
+          "column": 3
+        },
+        {
+          "row": 11,
+          "column": 4
+        },
+        {
+          "row": 11,
+          "column": 5
+        }
+      ],
+      "tableFormulaCells": []
+    },
+    "sample": "",
+    "box": {
+      "x": 16,
+      "y": 84,
+      "width": 178,
+      "height": 156
+    },
+    "widths": [33, 27, 32, 22, 29, 35],
+    "heights": [13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13],
+    "cells": [
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.0,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.0,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.0,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.0,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.0,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.0,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.08333333333333333,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.08333333333333333,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.08333333333333333,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.08333333333333333,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.08333333333333333,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.08333333333333333,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.16666666666666666,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.25,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.25,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.25,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.25,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.25,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.25,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.4166666666666667,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.4166666666666667,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.4166666666666667,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.4166666666666667,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.4166666666666667,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.4166666666666667,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.5,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.5,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.5,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.5,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.5,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.5,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.5833333333333334,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.5833333333333334,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.5833333333333334,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.5833333333333334,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.5833333333333334,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.5833333333333334,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.75,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.75,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.75,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.75,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.75,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.75,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.8333333333333334,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.9166666666666666,
+        "widthRatio": 0.1853932584269663,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.1853932584269663,
+        "yRatio": 0.9166666666666666,
+        "widthRatio": 0.15168539325842698,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.33707865168539325,
+        "yRatio": 0.9166666666666666,
+        "widthRatio": 0.1797752808988764,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.5168539325842697,
+        "yRatio": 0.9166666666666666,
+        "widthRatio": 0.12359550561797752,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.6404494382022472,
+        "yRatio": 0.9166666666666666,
+        "widthRatio": 0.16292134831460675,
+        "heightRatio": 0.08333333333333333
+      },
+      {
+        "xRatio": 0.8033707865168539,
+        "yRatio": 0.9166666666666666,
+        "widthRatio": 0.19662921348314608,
+        "heightRatio": 0.08333333333333333
+      }
+    ]
+  },
+  {
+    "id": "F01",
+    "page": 6,
+    "type": "table",
+    "title": ["公式實驗", "Formula laboratory"],
+    "settings": {
+      "maxRows": 9,
+      "tableColumns": 4,
+      "tableWritableCells": [
+        {
+          "row": 0,
+          "column": 0
+        },
+        {
+          "row": 0,
+          "column": 1
+        },
+        {
+          "row": 1,
+          "column": 0
+        },
+        {
+          "row": 1,
+          "column": 1
+        },
+        {
+          "row": 2,
+          "column": 0
+        },
+        {
+          "row": 2,
+          "column": 1
+        },
+        {
+          "row": 3,
+          "column": 0
+        },
+        {
+          "row": 3,
+          "column": 1
+        },
+        {
+          "row": 4,
+          "column": 0
+        },
+        {
+          "row": 4,
+          "column": 1
+        },
+        {
+          "row": 5,
+          "column": 0
+        },
+        {
+          "row": 5,
+          "column": 1
+        },
+        {
+          "row": 6,
+          "column": 0
+        },
+        {
+          "row": 6,
+          "column": 1
+        },
+        {
+          "row": 7,
+          "column": 0
+        },
+        {
+          "row": 7,
+          "column": 1
+        },
+        {
+          "row": 8,
+          "column": 0
+        },
+        {
+          "row": 8,
+          "column": 1
+        }
+      ],
+      "tableFormulaCells": [
+        {
+          "row": 0,
+          "column": 2,
+          "expression": "A+B",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 1,
+          "column": 2,
+          "expression": "A-B",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "expression": "A*B",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 3,
+          "column": 2,
+          "expression": "A*B/100",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 4,
+          "column": 2,
+          "expression": "A/B",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 5,
+          "column": 2,
+          "expression": "A^B",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 6,
+          "column": 2,
+          "expression": "sqrt(A)",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 7,
+          "column": 2,
+          "expression": "(A+B)*2",
+          "decimalPlaces": 2
+        },
+        {
+          "row": 8,
+          "column": 2,
+          "expression": "A+B",
+          "decimalPlaces": 2
+        }
+      ]
+    },
+    "sample": "",
+    "box": {
+      "x": 16,
+      "y": 83,
+      "width": 178,
+      "height": 126
+    },
+    "widths": [38, 38, 46, 56],
+    "heights": [14, 14, 14, 14, 14, 14, 14, 14, 14],
+    "cells": [
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.0,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.21348314606741572,
+        "yRatio": 0.0,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.42696629213483145,
+        "yRatio": 0.0,
+        "widthRatio": 0.25842696629213485,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.6853932584269663,
+        "yRatio": 0.0,
+        "widthRatio": 0.3146067415730337,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.1111111111111111,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.21348314606741572,
+        "yRatio": 0.1111111111111111,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.42696629213483145,
+        "yRatio": 0.1111111111111111,
+        "widthRatio": 0.25842696629213485,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.6853932584269663,
+        "yRatio": 0.1111111111111111,
+        "widthRatio": 0.3146067415730337,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.2222222222222222,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.21348314606741572,
+        "yRatio": 0.2222222222222222,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.42696629213483145,
+        "yRatio": 0.2222222222222222,
+        "widthRatio": 0.25842696629213485,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.6853932584269663,
+        "yRatio": 0.2222222222222222,
+        "widthRatio": 0.3146067415730337,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.21348314606741572,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.42696629213483145,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.25842696629213485,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.6853932584269663,
+        "yRatio": 0.3333333333333333,
+        "widthRatio": 0.3146067415730337,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.4444444444444444,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.21348314606741572,
+        "yRatio": 0.4444444444444444,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.42696629213483145,
+        "yRatio": 0.4444444444444444,
+        "widthRatio": 0.25842696629213485,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.6853932584269663,
+        "yRatio": 0.4444444444444444,
+        "widthRatio": 0.3146067415730337,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.5555555555555556,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.21348314606741572,
+        "yRatio": 0.5555555555555556,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.42696629213483145,
+        "yRatio": 0.5555555555555556,
+        "widthRatio": 0.25842696629213485,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.6853932584269663,
+        "yRatio": 0.5555555555555556,
+        "widthRatio": 0.3146067415730337,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.21348314606741572,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.42696629213483145,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.25842696629213485,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.6853932584269663,
+        "yRatio": 0.6666666666666666,
+        "widthRatio": 0.3146067415730337,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.7777777777777778,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.21348314606741572,
+        "yRatio": 0.7777777777777778,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.42696629213483145,
+        "yRatio": 0.7777777777777778,
+        "widthRatio": 0.25842696629213485,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.6853932584269663,
+        "yRatio": 0.7777777777777778,
+        "widthRatio": 0.3146067415730337,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.0,
+        "yRatio": 0.8888888888888888,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.21348314606741572,
+        "yRatio": 0.8888888888888888,
+        "widthRatio": 0.21348314606741572,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.42696629213483145,
+        "yRatio": 0.8888888888888888,
+        "widthRatio": 0.25842696629213485,
+        "heightRatio": 0.1111111111111111
+      },
+      {
+        "xRatio": 0.6853932584269663,
+        "yRatio": 0.8888888888888888,
+        "widthRatio": 0.3146067415730337,
+        "heightRatio": 0.1111111111111111
+      }
+    ]
+  },
+  {
+    "id": "G01",
+    "page": 7,
+    "type": "image",
+    "title": ["完整顯示", "Fit entire image"],
+    "settings": {
+      "imageFit": "contain",
+      "maxFileSizeMb": 2
+    },
+    "sample": "",
+    "box": {
+      "x": 16,
+      "y": 78,
+      "width": 56,
+      "height": 38
+    }
+  },
+  {
+    "id": "G02",
+    "page": 7,
+    "type": "image",
+    "title": ["填滿並裁切", "Crop to fill"],
+    "settings": {
+      "imageFit": "cover",
+      "maxFileSizeMb": 2
+    },
+    "sample": "",
+    "box": {
+      "x": 77,
+      "y": 78,
+      "width": 56,
+      "height": 38
+    }
+  },
+  {
+    "id": "G03",
+    "page": 7,
+    "type": "image",
+    "title": ["拉伸填滿", "Stretch image"],
+    "settings": {
+      "imageFit": "stretch",
+      "maxFileSizeMb": 2
+    },
+    "sample": "",
+    "box": {
+      "x": 138,
+      "y": 78,
+      "width": 56,
+      "height": 38
+    }
+  },
+  {
+    "id": "G04",
+    "page": 7,
+    "type": "signature",
+    "title": ["手寫簽名", "Draw signature"],
+    "settings": {
+      "signatureMode": "draw"
+    },
+    "sample": "",
+    "box": {
+      "x": 16,
+      "y": 165,
+      "width": 86,
+      "height": 28
+    }
+  },
+  {
+    "id": "G05",
+    "page": 7,
+    "type": "signature",
+    "title": ["上載簽名圖片", "Upload signature"],
+    "settings": {
+      "signatureMode": "upload"
+    },
+    "sample": "",
+    "box": {
+      "x": 108,
+      "y": 165,
+      "width": 86,
+      "height": 28
+    }
+  },
+  {
+    "id": "G06",
+    "page": 7,
+    "type": "signature",
+    "title": ["文字簽名", "Text signature"],
+    "settings": {
+      "signatureMode": "text"
+    },
+    "sample": "Demo User",
+    "box": {
+      "x": 16,
+      "y": 211,
+      "width": 86,
+      "height": 28
+    }
+  },
+  {
+    "id": "G07",
+    "page": 7,
+    "type": "signature",
+    "title": ["三種方式均可", "All signature modes"],
+    "settings": {
+      "signatureMode": "all"
+    },
+    "sample": "",
+    "box": {
+      "x": 108,
+      "y": 211,
+      "width": 86,
+      "height": 28
+    }
+  }
+]

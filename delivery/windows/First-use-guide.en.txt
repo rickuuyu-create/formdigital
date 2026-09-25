@@ -1,0 +1,15 @@
+Form Digital | local edition quick guide
+========================================
+
+1. Copy the entire “Form Digital package” folder to the Windows computer. Do not copy only the .exe file.
+2. Double-click “Form Digital.exe”. On first launch it creates a local data folder and opens http://localhost:3210/ in your default browser. No Google account, password or internet connection is needed to use it.
+3. Keep the small Form Digital window open while working. Closing it stops the site. Double-click the .exe again to restart it.
+4. The last step of the first-use guide points to “Start a new practice” near the bottom of the dashboard. Try the example form before importing your own. To see the guide again, open Settings & Backup and choose “Replay tour”.
+
+Data is stored by default in “%LOCALAPPDATA%\FormDigital\Data” for the current Windows user, outside the program folder. Keep this folder when updating the program, and create backups regularly in the site.
+
+The local edition accepts connections only from localhost on this computer. It is not exposed to the local network or the public internet. If another program already uses port 3210 or 43210, close that program or contact the maintainer.
+
+The package does not include templates, completed forms or secrets from the development computer. Back up existing data before migrating it with the site's backup and restore tools.
+
+The computer needs Windows 10/11 and a default browser. Node.js is included in the package.

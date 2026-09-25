@@ -1,0 +1,5 @@
+Form Digital includes the Node.js runtime and third-party npm packages.
+The Node.js distribution license and bundled notices are in runtime/NODE_LICENSE.txt.
+Their original license files are retained inside app/node_modules where supplied.
+The included application source is subject to the project's Apache License 2.0.
+This package excludes developer credentials and existing user data.
