@@ -1,0 +1,2 @@
+# Keep the pnpm patch byte-for-byte: its hash is pinned in pnpm-lock.yaml.
+patches/*.patch -text whitespace=-blank-at-eol,-blank-at-eof
