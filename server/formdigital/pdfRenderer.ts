@@ -9,6 +9,7 @@ import {
   StandardFonts,
   TextAlignment,
   drawEllipse,
+  drawTextField,
   clip,
   degrees,
   endPath,
@@ -33,6 +34,7 @@ import { resolveEffectiveTableGrid, type TableRoleDefinition } from "../../share
 import { getOwnedAssetBytes, storeOwnedAsset } from "./assetStore";
 import { getInstanceForOwner, recordInstanceOutput } from "./repository";
 import { validateFieldValues } from "../../shared/fieldValidation";
+import { wrapTextLines } from "../../shared/textWrapping";
 
 const MM_TO_POINT = 72 / 25.4;
 
@@ -376,23 +378,6 @@ function spacedTextWidth(font: PDFFont, value: string, size: number, spacing: nu
   return textWidth(font, value, size) + Math.max(0, Array.from(value).length - 1) * spacing;
 }
 
-function wrapText(value: string, font: PDFFont, size: number, maxWidth: number, spacing = 0) {
-  const logicalLines = value.replace(/\r/g, "").split("\n");
-  const result: string[] = [];
-  for (const logicalLine of logicalLines) {
-    if (!logicalLine || maxWidth <= 0) { result.push(logicalLine); continue; }
-    let current = "";
-    for (const character of Array.from(logicalLine)) {
-      if (current && spacedTextWidth(font, current + character, size, spacing) > maxWidth) {
-        result.push(current);
-        current = character;
-      } else current += character;
-    }
-    result.push(current);
-  }
-  return result;
-}
-
 function alignedX(x: number, width: number, text: string, font: PDFFont, size: number, align?: "left" | "center" | "right") {
   const measured = textWidth(font, text, size);
   if (align === "right") return x + Math.max(0, width - measured);
@@ -445,28 +430,45 @@ function withFieldClip(page: PDFPage, position: ReturnType<typeof drawPosition>,
   }
 }
 
-function drawPlainText(page: PDFPage, value: string, font: PDFFont, coordinate: FieldCoordinate, position: ReturnType<typeof drawPosition>, definition: Record<string, unknown>) {
+function layoutPlainText(value: string, font: PDFFont, coordinate: FieldCoordinate, position: Pick<ReturnType<typeof drawPosition>, "width" | "height">, definition: Record<string, unknown>, multiline = false) {
   const initialSize = Math.max(1, coordinate.fontSizePt ?? (typeof definition.fontSizePt === "number" ? definition.fontSizePt : 10));
   const initialLineHeight = typeof definition.lineHeightPt === "number" && definition.lineHeightPt > 0 ? definition.lineHeightPt : initialSize * 1.2;
   const spacing = letterSpacing(definition);
   const overflow = definition.overflow === "block" || definition.overflow === "shrink" || definition.overflow === "wrap" ? definition.overflow : "warn";
+  const paragraph = multiline || definition.multiline === true || overflow === "wrap";
   let fontSize = initialSize;
   let lineHeight = initialLineHeight;
-  let lines = wrapText(value, font, fontSize, position.width, spacing);
+  const layoutLines = () => overflow === "shrink" && !paragraph && !/[\r\n]/.test(value)
+    ? [value]
+    : wrapTextLines(value, position.width, text => spacedTextWidth(font, text, fontSize, spacing), overflow !== "shrink");
+  let lines = layoutLines();
   const fits = () => lines.every(line => spacedTextWidth(font, line, fontSize, spacing) <= position.width + 0.01) && lines.length * lineHeight <= position.height + 0.01;
-  if (overflow === "shrink") {
+  if (value && overflow === "shrink") {
     while (!fits() && fontSize > 4) {
       fontSize = Math.max(4, fontSize - 0.25);
       lineHeight = initialLineHeight * (fontSize / initialSize);
-      lines = wrapText(value, font, fontSize, position.width, spacing);
+      lines = layoutLines();
     }
     if (!fits()) throw new Error("PDF 欄位內容即使縮小後仍超出可用範圍。");
-  } else if (overflow === "block" && !fits()) {
+  } else if (value && overflow === "block" && !fits()) {
     throw new Error("PDF 欄位內容超出可用範圍，已停止輸出。");
   }
+  return { lines, fontSize, lineHeight, paragraph, spacing };
+}
+
+function drawPlainText(page: PDFPage, value: string, font: PDFFont, coordinate: FieldCoordinate, position: ReturnType<typeof drawPosition>, definition: Record<string, unknown>, multiline = false) {
+  const { lines, fontSize, lineHeight, paragraph, spacing } = layoutPlainText(value, font, coordinate, position, definition, multiline);
+  // Native single-line controls and table cells centre their line vertically.
+  // PDF drawText takes a baseline, not a top edge. Centre the font's ascent /
+  // descent envelope, while keeping paragraphs and wrapped content top-aligned.
+  const ascent = font.heightAtSize(fontSize, { descender: false });
+  const descent = font.heightAtSize(fontSize) - ascent;
+  const firstBaseline = !paragraph && lines.length === 1
+    ? position.y + (position.height - ascent + descent) / 2
+    : position.y + position.height - fontSize;
   withFieldClip(page, position, () => {
     lines.forEach((line, index) => {
-      const y = position.y + position.height - fontSize - index * lineHeight;
+      const y = firstBaseline - index * lineHeight;
       const measured = spacedTextWidth(font, line, fontSize, spacing);
       const align = coordinate.align ?? (definition.align === "center" || definition.align === "right" ? definition.align : "left");
       const x = align === "right" ? position.x + Math.max(0, position.width - measured) : align === "center" ? position.x + Math.max(0, (position.width - measured) / 2) : position.x;
@@ -494,8 +496,7 @@ function drawCharacterBoxes(page: PDFPage, value: string, font: PDFFont, coordin
 /**
  * Draw a tick, cross, or dot centred inside `position`.
  *
- * Text would sit on the box's top edge (drawPlainText anchors to the baseline)
- * and needs a font that can encode the glyph; vector strokes always land in the
+ * Text depends on font-specific glyph metrics and encoding; vector strokes land in the
  * middle of the printed square and never depend on a font.
  */
 function drawFieldMark(page: PDFPage, style: unknown, position: ReturnType<typeof drawPosition>, color: Color = rgb(0.05, 0.09, 0.14)) {
@@ -698,12 +699,39 @@ function addEditableField(pdf: PDFDocument, page: PDFPage, field: VersionField, 
   }
   const textField = form.createTextField(name);
   textField.addToPage(page, options);
-  if (definition.multiline === true || field.fieldType === "textarea") textField.enableMultiline();
+  // Native widgets reserve padding. Apply the same overflow policy before
+  // generating their appearance; an editable export must not bypass block.
+  const layout = layoutPlainText(value, font, field.coordinate as FieldCoordinate,
+    { width: Math.max(0, options.width - 4), height: Math.max(0, options.height - 4) }, definition, field.fieldType === "textarea");
+  if (layout.paragraph || layout.lines.length > 1) textField.enableMultiline();
   const align = (field.coordinate as FieldCoordinate).align ?? definition.align;
   textField.setAlignment(align === "center" ? TextAlignment.Center : align === "right" ? TextAlignment.Right : TextAlignment.Left);
-  textField.setFontSize(Math.max(4, (field.coordinate as FieldCoordinate).fontSizePt ?? 10));
+  textField.setFontSize(layout.fontSize);
   textField.setText(value);
-  textField.updateAppearances(font);
+  // The native default appearance does not split an over-wide unbroken word.
+  // Supply our soft-wrapped appearance without adding newlines to the saved
+  // field value. Readers remain free to reflow it after the user edits it.
+  textField.updateAppearances(font, (_field, widget) => {
+    const { width, height } = widget.getRectangle();
+    const ascent = font.heightAtSize(layout.fontSize, { descender: false });
+    const descent = font.heightAtSize(layout.fontSize) - ascent;
+    const firstY = !layout.paragraph && layout.lines.length === 1
+      ? (height - ascent + descent) / 2 : height - 2 - layout.fontSize;
+    const textLines = layout.lines.flatMap((line, index) => {
+      const measured = spacedTextWidth(font, line, layout.fontSize, layout.spacing);
+      let x = 2 + (align === "center" ? Math.max(0, (width - 4 - measured) / 2) : align === "right" ? Math.max(0, width - 4 - measured) : 0);
+      const y = firstY - index * layout.lineHeight;
+      if (!layout.spacing) return [{ encoded: font.encodeText(line), x, y }];
+      return Array.from(line).map(character => {
+        const item = { encoded: font.encodeText(character), x, y };
+        x += spacedTextWidth(font, character, layout.fontSize, 0) + layout.spacing;
+        return item;
+      });
+    });
+    return drawTextField({ x: 0, y: 0, width, height, borderWidth: 0,
+      color: undefined, borderColor: undefined, padding: 2,
+      textLines, font: font.name, fontSize: layout.fontSize, textColor: textColor(definition.color) });
+  });
 }
 
 async function createPdfPages(mode: PdfOutputMode, pages: PageManifestItem[], loadSource: (assetId: string) => Promise<RenderPageSource>) {
@@ -845,7 +873,7 @@ export async function renderVersionPdf(input: {
       drawPlainText(page, choices.length ? selectedSingleOption(value, choices) : value, font, coordinate, position, definition);
     } else if (field.fieldType === "characterBox") drawCharacterBoxes(page, value, font, coordinate, position, definition, detectedPositions);
     else if (field.fieldType === "table") drawTable(page, value, font, position, coordinate, definition);
-    else drawPlainText(page, value, font, coordinate, position, definition);
+    else drawPlainText(page, value, font, coordinate, position, definition, field.fieldType === "textarea");
   }
   return pdf.save();
 }

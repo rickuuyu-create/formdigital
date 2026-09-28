@@ -21,6 +21,7 @@ import { PracticeFillGuide } from './TemplatePractice';
 import { isPracticeTemplate } from '@/lib/template-practice';
 import { trpc } from "@/lib/trpc";
 import { useI18n } from "@/lib/i18n";
+import { overflowHelp } from "@/lib/overflow-help";
 import {
   isCheckboxChecked,
   isCheckboxOptionSelected,
@@ -511,14 +512,19 @@ function FieldControl({
         ))}
       </select>
     );
-  if (field.type === "textarea")
+  if (field.type === "textarea" || (field.type === "text" && field.overflow === "wrap"))
     return (
       <textarea
         id={id}
         className="min-h-24 w-full border bg-[#fffefa] p-2 text-xs"
         value={value}
         maxLength={field.maxLength}
-        onChange={event => onChange(event.target.value)}
+        onChange={event => {
+          let next = event.target.value;
+          if (field.type === "text" && field.inputMode === "number") next = next.replace(/[^0-9+-.]/g, "");
+          if (field.type === "text" && field.inputMode === "text") next = next.replace(/[0-9]/g, "");
+          onChange(next);
+        }}
       />
     );
   if (field.type === "table")
@@ -1181,11 +1187,7 @@ export function InstanceStudio({
                     />
                     {activeFieldId === field.id && ["text", "textarea", "number", "date", "time"].includes(field.type) && (
                       <p className="mt-1 text-[10px] text-[#687782]">
-                        {field.overflow === "shrink"
-                          ? tr("輸出 PDF 時會按需要縮小文字；若仍放不下，會停止輸出並提示縮短內容。", "PDF export shrinks text to fit. If it still does not fit, export stops and asks you to shorten it.")
-                          : field.overflow === "block"
-                            ? tr("文字超出紙上欄位容量時，PDF 輸出會停止；輸入框可容納的字數不代表紙面容量。", "PDF export stops if text exceeds the printed field. Input length does not guarantee it fits on paper.")
-                            : tr("請留意紙上欄位容量；輸出會換行，但超出框底的文字可能被裁切。", "Check the printed field capacity. Export wraps text, but text below the field may be clipped.")}
+                        {tr(...overflowHelp(field))}
                       </p>
                     )}
                     {fieldSaved.length > 0 && (

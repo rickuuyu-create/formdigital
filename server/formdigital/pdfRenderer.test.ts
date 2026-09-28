@@ -188,6 +188,95 @@ async function drawnGlyphs(bytes: Uint8Array) {
   return glyphs.sort((left, right) => right.y - left.y || left.x - right.x);
 }
 
+describe("English overflow policies", () => {
+  const value = "Hong Kong is the city";
+  const render = async (overflow: string, fieldType = "text", heightMm = 20, text = value, widthPt = 55) => renderVersionPdf({
+    mode: "overlay", pages: [{ page: 1, widthMm: 210, heightMm: 297 }],
+    fields: [{ stableFieldId: "note", fieldType, definition: { overflow, lineHeightPt: 12 },
+      coordinate: { page: 1, xMm: 20, yMm: 30, widthMm: widthPt / mmToPoint(1), heightMm, fontSizePt: 10 } }],
+    values: { note: text }, loadSource: async () => { throw new Error("No source needed"); },
+  });
+  it.each(["wrap", "warn", "block"])("%s wraps at spaces instead of cutting an English word", async overflow => {
+    expect((await drawnGlyphs(await render(overflow))).map(g => g.text)).toEqual(["Hong Kong", "is the city"]);
+  });
+  it("single-line shrink reduces the font instead of splitting into lines", async () => {
+    const pdf = await render("shrink");
+    expect((await drawnGlyphs(pdf)).map(g => g.text)).toEqual([value]);
+    expect(await decodedContent(pdf)).not.toContain(" 10 Tf");
+  });
+  it("multiline shrink keeps English words intact", async () => {
+    expect((await drawnGlyphs(await render("shrink", "textarea"))).map(g => g.text)).toEqual(["Hong Kong", "is the city"]);
+  });
+  it("shrinks an oversized word in multiline fields instead of chopping it up", async () => {
+    expect((await drawnGlyphs(await render("shrink", "textarea", 20, "ABCDEFGHIJKLMNO", 60))).map(g => g.text)).toEqual(["ABCDEFGHIJKLMNO"]);
+  });
+  it("rejects shrink when even the minimum font cannot fit", async () => {
+    await expect(render("shrink", "text", 20, "W".repeat(100))).rejects.toThrow("縮小後仍超出");
+  });
+  it("blocks output when word wrapping needs more vertical room", async () => {
+    await expect(render("block", "text", 4)).rejects.toThrow("已停止輸出");
+  });
+  it.each(["wrap", "warn"])("%s preserves content and the clipping boundary when the box is short", async overflow => {
+    const pdf = await render(overflow, "text", 4);
+    expect((await drawnGlyphs(pdf)).map(g => g.text)).toEqual(["Hong Kong", "is the city"]);
+    expect(await clippingRectangles(pdf)).toHaveLength(1);
+  });
+  it("editable output retains the original value while its appearance wraps a long word", async () => {
+    const source = await PDFDocument.create(); source.addPage([mmToPoint(210), mmToPoint(297)]);
+    const sourceBytes = await source.save();
+    const pdf = await renderVersionPdf({ mode: "editable", pages: [{ page: 1, widthMm: 210, heightMm: 297, assetId: "synthetic" }],
+      fields: [{ stableFieldId: "note", fieldType: "text", definition: { overflow: "wrap" }, coordinate: { xMm: 20, yMm: 30, widthMm: 20, heightMm: 20, fontSizePt: 10 } }],
+      values: { note: "ABCDEFGHIJKLMNO" }, loadSource: async () => ({ mimeType: "application/pdf", bytes: sourceBytes }) });
+    const field = (await PDFDocument.load(pdf)).getForm().getTextField("note");
+    expect(field.getText()).toBe("ABCDEFGHIJKLMNO");
+    expect(field.isMultiline()).toBe(true);
+    const glyphs = await drawnGlyphs(pdf);
+    expect(glyphs.map(g => g.text).join("")).toBe("ABCDEFGHIJKLMNO");
+    expect(glyphs.length).toBeGreaterThan(1);
+  });
+  it.each(["block", "shrink"])("editable %s also refuses an oversized value", async overflow => {
+    const source = await PDFDocument.create(); source.addPage([mmToPoint(210), mmToPoint(297)]);
+    const sourceBytes = await source.save();
+    const fixture = { mode: "editable" as const, pages: [{ page: 1, widthMm: 210, heightMm: 297, assetId: "synthetic" }],
+      fields: [{ stableFieldId: "note", fieldType: "text", definition: { overflow }, coordinate: { xMm: 20, yMm: 30, widthMm: 20, heightMm: 4, fontSizePt: 10 } }],
+      loadSource: async () => ({ mimeType: "application/pdf", bytes: sourceBytes }) };
+    await expect(renderVersionPdf({ ...fixture, values: { note: "W".repeat(100) } })).rejects.toThrow("超出");
+    await expect(renderVersionPdf({ ...fixture, values: { note: "" } })).resolves.toBeInstanceOf(Uint8Array);
+  });
+});
+
+describe("flattened text baseline", () => {
+  const render = async (fieldType: string, heightMm: number, value = "KKKK", align: "left" | "center" | "right" = "center") => drawnGlyphs(await renderVersionPdf({
+    mode: "overlay", pages: [{ page: 1, widthMm: 210, heightMm: 297 }],
+    fields: [{ stableFieldId: "text", fieldType, definition: { lineHeightPt: 12 }, coordinate: { page: 1, xMm: 20, yMm: 30, widthMm: 80, heightMm, fontSizePt: 10, align } }],
+    values: { text: value }, loadSource: async () => { throw new Error("Synthetic overlay needs no source"); },
+  }));
+
+  it.each(["text", "number", "date", "time", "select"])("moves %s text by half the extra box height, matching a single-line control", async type => {
+    const short = await render(type, 6);
+    const tall = await render(type, 20);
+    expect(short[0].y - tall[0].y).toBeCloseTo(mmToPoint(7), 6);
+    expect(short[0].x).toBeCloseTo(tall[0].x, 6);
+  });
+
+  it.each(["left", "center", "right"] as const)("keeps vertical placement independent of horizontal %s alignment", async align => {
+    const center = await render("text", 14);
+    const actual = await render("text", 14, "KKKK", align);
+    expect(actual[0].y).toBe(center[0].y);
+  });
+
+  it("keeps a textarea at the top even when it currently contains one line", async () => {
+    expect((await render("textarea", 20))[0].y).toBe((await render("textarea", 6))[0].y);
+  });
+
+  it("keeps explicit paragraphs top-aligned and preserves their line spacing", async () => {
+    const short = await render("text", 14, "FIRST\nSECOND");
+    const tall = await render("text", 20, "FIRST\nSECOND");
+    expect(tall).toEqual(short);
+    expect(tall[0].y - tall[1].y).toBeCloseTo(12, 6);
+  });
+});
+
 describe("segmented and table field output", () => {
   const dateBoxes = [
     ...Array.from({ length: 2 }, (_, index) => ({ xRatio: index * 0.09, yRatio: 0, widthRatio: 0.09, heightRatio: 1 })),
@@ -425,8 +514,10 @@ describe("segmented and table field output", () => {
       expect(at(after, untouched)).toEqual(at(before, untouched));
     // Field box left 20mm + 60% of its 90mm width, plus the cell's own padding.
     expect(at(after, "B").x).toBeCloseTo(mmToPoint(74) + 2, 3);
-    // Cell bottom 245mm up the page, plus its 9mm height, less padding and font.
-    expect(at(after, "B").y).toBeCloseTo(mmToPoint(254) - 9, 3);
+    // The 8pt Helvetica ascent/descent envelope is centred in this 9mm cell.
+    // Moving/resizing a guide must move the text with the centre, not its top.
+    const inkMidpoint = at(after, "B").y + (0.718 - 0.207) * 8 / 2;
+    expect(inkMidpoint).toBeCloseTo(mmToPoint(249.5), 3);
   });
 });
 

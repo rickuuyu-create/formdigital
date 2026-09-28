@@ -682,6 +682,8 @@ function FieldContent({
   if (field.type === "signature" && value?.startsWith("text:"))
     return <span className="field-value italic">{value.slice(5)}</span>;
 
+  if (field.type === "textarea" || (field.type === "text" && field.overflow === "wrap"))
+    return <span className="field-value" style={{ display: "block", alignSelf: "stretch", whiteSpace: "pre-wrap", overflowWrap: "anywhere", wordBreak: "normal" }}>{value || field.placeholder}</span>;
   return <span className="field-value">{value || field.placeholder}</span>;
 }
 
@@ -805,12 +807,18 @@ function CanvasFillControl({
         ))}
       </select>
     );
-  if (field.type === "textarea")
+  if (field.type === "textarea" || (field.type === "text" && field.overflow === "wrap"))
     return (
       <textarea
         {...common}
         maxLength={field.maxLength}
-        onChange={event => onChange(event.target.value)}
+        style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", wordBreak: "normal" }}
+        onChange={event => {
+          let next = event.target.value;
+          if (field.type === "text" && field.inputMode === "number") next = next.replace(/[^0-9+-.]/g, "");
+          if (field.type === "text" && field.inputMode === "text") next = next.replace(/[0-9]/g, "");
+          onChange(next);
+        }}
       />
     );
   if (

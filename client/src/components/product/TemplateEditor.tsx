@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { overflowHelp } from "@/lib/overflow-help";
 import {
   AlignCenterHorizontal,
   AlignCenterVertical,
@@ -2085,11 +2086,12 @@ export function TemplateEditor({
                   })
                 }
               >
-                <option value="block">{tr("禁止輸入", "Block input")}</option>
+                <option value="block">{tr("超限時停止輸出", "Stop export on overflow")}</option>
                 <option value="shrink">{tr("自動縮小", "Shrink automatically")}</option>
                 <option value="warn">{tr("警告但允許", "Warn but allow")}</option>
                 <option value="wrap">{tr("多行換行", "Wrap lines")}</option>
               </select>
+              <p className="mt-1 text-[10px] text-[#687782]" data-testid="overflow-help">{tr(...overflowHelp(activeField))}</p>
               <label className="setting-label">{tr("驗證", "Validation")}</label>
               <select
                 className="setting-select"
