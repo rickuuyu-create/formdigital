@@ -46,7 +46,8 @@ internal sealed class FormDigitalUpdater : Form
             if (target != null) { BeginUpdate(); return; }
             string here = AppDomain.CurrentDomain.BaseDirectory;
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string[] candidates = { here, Path.Combine(here, "Form Digital 交付包"), Path.Combine(desktop, "Form Digital 交付包"), Path.Combine(desktop, "Kenny Form", "Form Digital 交付包") };
+            string parent = Path.GetDirectoryName(here.TrimEnd(Path.DirectorySeparatorChar));
+            string[] candidates = { here, Path.Combine(here, "Form Digital 交付包"), Path.Combine(parent ?? here, "Form Digital 交付包"), Path.Combine(desktop, "Form Digital 交付包") };
             foreach (string candidate in candidates)
                 if (File.Exists(Path.Combine(candidate, "Form Digital.exe"))) { target = candidate; break; }
             if (target == null) SelectFolder(); else BeginUpdate();
