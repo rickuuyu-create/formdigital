@@ -19,6 +19,8 @@ The launcher opens `http://localhost:3210/`. On first use, the guide points to *
 
 Your data is stored under `%LOCALAPPDATA%\FormDigital\Data` by default. It is outside the program folder, so replacing the program does not replace your forms. Back it up regularly in **Settings & Backup**. See [the Windows quick guide](delivery/windows/首次使用說明.txt) for everyday use.
 
+Already have a Windows package? See [offline updates](delivery/windows/UPDATES.md) for the standalone updater and [recent changes](CHANGELOG.md) for the PDF layout fixes. Updates are checked against the package they were built for; an incompatible package is left unchanged.
+
 ## Development
 
 The normal development server retains an optional Google authentication path for testing. The packaged local edition enables `FORMDIGITAL_LOCAL_ONLY=1` and builds the interface with `VITE_FORMDIGITAL_LOCAL_ONLY=1`; no Google credentials are needed for the package. Keep secrets in local environment files, never in a public commit.

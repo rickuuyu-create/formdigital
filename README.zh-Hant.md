@@ -19,6 +19,8 @@ Form Digital 是在 Windows 本機使用的表格數碼化程式。你可以匯�
 
 資料預設儲存在 `%LOCALAPPDATA%\FormDigital\Data`，與程式資料夾分開。更換程式時請保留這個資料夾，並定期在「設定與備份」建立備份。日常操作可參考[首次使用說明](delivery/windows/首次使用說明.txt)。
 
+已有 Windows 交付包的使用者，可參考[離線更新說明](delivery/windows/UPDATES.md)。獨立更新 exe 會核對現有版本，只替換程式檔並保留舊版副本；版本不相容時不會更新。PDF 排版修正詳見[更新紀錄](CHANGELOG.md)。
+
 ## 開發與授權
 
 一般開發模式仍保留可選的 Google 驗證流程；本機交付包使用 `FORMDIGITAL_LOCAL_ONLY=1`，介面建置亦使用 `VITE_FORMDIGITAL_LOCAL_ONLY=1`，毋須 Google 憑證。密鑰只應放在本機環境檔，切勿提交到公開儲存庫。

@@ -19,6 +19,8 @@ Form Digital 是一款在 Windows 本地运行的表格数字化程序。你可�
 
 数据默认保存在 `%LOCALAPPDATA%\FormDigital\Data`，与程序文件夹分开。更新程序时请保留该文件夹，并定期在“设置与备份”中创建备份。日常操作可参考[首次使用说明](delivery/windows/首次使用说明.zh-Hans.txt)。
 
+已有 Windows 交付包的用户，可参考[离线更新说明](delivery/windows/UPDATES.md)。独立更新 exe 会核对现有版本，只替换程序文件并保留旧版副本；版本不兼容时不会更新。PDF 排版修正见[更新记录](CHANGELOG.md)。
+
 ## 开发与许可
 
 普通开发模式保留了可选的 Google 身份验证流程；本地交付包使用 `FORMDIGITAL_LOCAL_ONLY=1`，界面构建时也使用 `VITE_FORMDIGITAL_LOCAL_ONLY=1`，无需 Google 凭据。密钥只能放在本地环境文件中，不要提交到公开仓库。

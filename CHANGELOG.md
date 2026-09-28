@@ -2,6 +2,8 @@
 
 ## 2026-09-28 — PDF text layout
 
+Windows users with the compatible local package can apply these fixes with the offline update executable. It keeps the old program as a backup and leaves form data and settings in place. See [update instructions](delivery/windows/UPDATES.md).
+
 Single-line text now stays vertically centred in exported PDFs, matching the fill preview more closely. English text wraps between words instead of splitting `is` into `i` and `s`. Single-line automatic shrinking reduces the font before introducing a line break; multiline fields keep their paragraph structure.
 
 Editable PDFs now use the same initial wrapping rules, retain the original field value and enforce overflow checks. Text fields set to wrap also show a multiline control in the app. “Block input” has been renamed “Stop export on overflow”: you can still enter and save text, but export stops when it will not fit.
