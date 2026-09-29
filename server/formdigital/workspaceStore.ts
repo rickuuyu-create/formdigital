@@ -1,4 +1,5 @@
 import { loadLocalWorkspace, saveLocalWorkspace } from "./localServiceClient";
+import { assertExpectedWorkspace } from "./editGuard";
 
 export type LocalTemplate = {
   id: string;
@@ -153,6 +154,7 @@ export async function mutateWorkspace<T>(ownerKey: string, operation: string, mu
   await previous;
   try {
     const { revision, workspace } = await readWorkspace(ownerKey);
+    assertExpectedWorkspace(workspace);
     const result = await mutation(workspace);
     workspace.updatedAt = new Date().toISOString();
     workspace.operationJournal.push({ operation, at: workspace.updatedAt });

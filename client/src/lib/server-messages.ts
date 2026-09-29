@@ -97,6 +97,7 @@ export function translateServerMessage(
 ) {
   const target = normalizeFormulaLocale(locale);
   const raw = String(value || "");
+  if (raw.includes("EDIT_CONFLICT")) return translate("這份資料已被另一個視窗或 AI 修改。你的未儲存內容仍保留，請先核對最新版本再儲存。", "Another window or AI changed this record. Your unsaved input is retained; compare the latest version before saving.");
   // Stable issue markers are rendered from the shared trilingual catalog first,
   // so no raw code, internal suffix or Traditional Chinese can survive. Then the
   // fixed outer wrapper (if any) is localized to match the inner message.

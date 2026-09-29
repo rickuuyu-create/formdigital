@@ -715,6 +715,19 @@ export function InstanceStudio({
       }
     | undefined;
   const [values, setValues] = useState<Record<string, string>>({});
+  const valuesRevisionRef = useRef<string | undefined>(undefined);
+  const latestValuesRef = useRef(values);
+  latestValuesRef.current = values;
+  const valueSaveQueueRef = useRef<Promise<unknown>>(Promise.resolve());
+  const persistValues = (id:string,snapshot:Record<string,string>) => {
+    const write=valueSaveQueueRef.current.then(async()=>{
+      const saved=await saveMutation.mutateAsync({instanceId:id,values:snapshot,expectedValuesHash:valuesRevisionRef.current});
+      valuesRevisionRef.current=saved.valuesHash;
+      return saved;
+    });
+    valueSaveQueueRef.current=write.catch(()=>undefined);
+    return write;
+  };
   const [activeFieldId, setActiveFieldId] = useState("");
   const [activePage, setActivePage] = useState(1);
   const [zoom, setZoom] = useState(1);
@@ -790,7 +803,9 @@ export function InstanceStudio({
   );
   useEffect(() => {
     if (!data) return;
+    if(dirty && data.instance?.id===currentId)return;
     if (data.instance) {
+      valuesRevisionRef.current=data.instance.valuesHash;
       setValues(data.instance.values);
       setCurrentId(data.instance.id);
     } else {
@@ -808,18 +823,18 @@ export function InstanceStudio({
     }
     setActiveFieldId(fields[0]?.id ?? "");
     setDirty(false);
-  }, [data?.instance?.id, data?.version.id, fields.length]);
+  }, [data?.instance?.id, data?.instance?.valuesHash, data?.version.id, fields.length]);
   useEffect(() => {
     if (!dirty || !currentId) return;
     const timer = window.setTimeout(async () => {
       try {
-        await saveMutation.mutateAsync({ instanceId: currentId, values });
+        await persistValues(currentId, values);
         if (!issues.length && data?.instance?.status === "draft")
           await statusMutation.mutateAsync({
             instanceId: currentId,
             status: "completed",
           });
-        setDirty(false);
+        if(latestValuesRef.current===values)setDirty(false);
         refresh();
       } catch (error) {
         serverError(error, "自動保存失敗", "Autosave failed");
@@ -857,8 +872,8 @@ export function InstanceStudio({
   const save = async () => {
     if (!currentId) return createInstance();
     try {
-      await saveMutation.mutateAsync({ instanceId: currentId, values });
-      setDirty(false);
+      await persistValues(currentId, values);
+      if(latestValuesRef.current===values)setDirty(false);
       refresh();
       toast.success(tr("Instance 已保存", "Instance saved"));
     } catch (error) {

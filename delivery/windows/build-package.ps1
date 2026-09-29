@@ -25,7 +25,7 @@ Push-Location $project
 try {
   & (Join-Path $project 'node_modules\.bin\vite.cmd') build --outDir (Join-Path $distRoot 'public') --emptyOutDir
   if ($LASTEXITCODE -ne 0) { throw "Vite build failed: $LASTEXITCODE" }
-  & (Join-Path $project 'node_modules\.bin\esbuild.cmd') 'server/_core/index.ts' --platform=node --packages=external --bundle --format=esm "--outdir=$distRoot"
+  & node (Join-Path $project 'scripts\build-server.mjs') $distRoot --with-browser
   if ($LASTEXITCODE -ne 0) { throw "Server build failed: $LASTEXITCODE" }
 } finally {
   Pop-Location

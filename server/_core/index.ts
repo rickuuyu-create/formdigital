@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import path from "node:path";
+import { createRequire } from "node:module";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "../routers";
 import { registerGoogleAuthRoutes } from "../formdigital/googleAuth";
@@ -9,11 +10,13 @@ import { registerLocalDataRoutes } from "../formdigital/localAssetRoutes";
 import { isLocalOnlyMode, localOnlyRequestAllowed } from "../formdigital/localOnly";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { registerMcpTransport, registerMcpSettings } from "../mcp/server";
 
 async function startServer() {
   const app = express();
   const server = createServer(app);
   const port = parseInt(process.env.PORT || "3000");
+  registerMcpTransport(app, port);
   if (isLocalOnlyMode()) {
     app.use((request, response, next) => {
       const headers: Record<string, string | undefined> = {};
@@ -31,7 +34,9 @@ async function startServer() {
       }
       response.setHeader("Content-Security-Policy", [
         "default-src 'self'",
-        "connect-src 'self'",
+        // DOCX rasterisation fetches local blob images created by docx-preview.
+        // Keep remote network origins blocked in the offline edition.
+        "connect-src 'self' blob:",
         "script-src 'self' 'wasm-unsafe-eval'",
         "worker-src 'self' blob:",
         "style-src 'self' 'unsafe-inline'",
@@ -45,10 +50,7 @@ async function startServer() {
       next();
     });
   }
-  const pdfjsAssetsRoot = path.resolve(
-    import.meta.dirname,
-    "../../node_modules/pdfjs-dist"
-  );
+  const pdfjsAssetsRoot = path.dirname(createRequire(import.meta.url).resolve("pdfjs-dist/package.json"));
   app.use("/pdfjs/cmaps", express.static(path.join(pdfjsAssetsRoot, "cmaps")));
   app.use(
     "/pdfjs/standard-fonts",
@@ -57,6 +59,7 @@ async function startServer() {
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  await registerMcpSettings(app, port);
   registerLocalDataRoutes(app);
   if (isLocalOnlyMode())
     app.use("/api/auth/google", (_request, response) => response.sendStatus(404));

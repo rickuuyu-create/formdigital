@@ -95,6 +95,7 @@ export type InstanceRecord = {
   name: string;
   status: "draft" | "completed" | "printed";
   values: Record<string, string>;
+  valuesHash?: string;
   printCount: number;
   outputHistory: Array<Record<string, unknown>>;
   createdAt: number;

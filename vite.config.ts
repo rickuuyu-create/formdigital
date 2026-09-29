@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => {
   root: path.resolve(import.meta.dirname, "client"),
   publicDir: path.resolve(import.meta.dirname, "client", "public"),
   build: {
+    rollupOptions: { input: { app: path.resolve(import.meta.dirname, "client/index.html"), mcpWorker: path.resolve(import.meta.dirname, "client/mcp-worker.html") } },
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },

@@ -9,6 +9,7 @@ import {
   sha256,
   type JsonValue,
 } from "./domain";
+import { assertExpectedRecord } from "./editGuard";
 import {
   mutateWorkspace,
   readWorkspace,
@@ -131,6 +132,7 @@ async function v2InstanceWithRevision(owner: string, instanceId: string) {
   const result = await queryLocalWorkspaceV2<LocalInstance>(owner, {
     collection: "instances", where: { id: instanceId }, limit: 1,
   });
+  assertExpectedRecord("instances", result.records[0]);
   return { instance: result.records[0], revision: result.revision };
 }
 
@@ -476,7 +478,7 @@ export async function getInstanceForOwner(
 export async function updateDraftTemplateFields(
   ownerId: string | number,
   versionId: string,
-  input: { fields: FieldDraft[]; printSettings?: JsonValue }
+  input: { fields: FieldDraft[]; printSettings?: JsonValue; pageManifest?: JsonValue; expectedContentHash?: string }
 ) {
   const owner = ownerKey(ownerId);
   return mutateWorkspace(owner, "template.save-draft", workspace => {
@@ -484,16 +486,18 @@ export async function updateDraftTemplateFields(
       item => item.id === versionId
     );
     if (!version) throw new Error("找不到指定版本。");
+    if (input.expectedContentHash && version.contentHash !== input.expectedContentHash) throw new Error("EDIT_CONFLICT");
     if (version.state !== "draft")
       throw new Error(
         "已發佈或取代的 Template Version 不可修改；請建立新的 Draft Version。"
       );
     const updatedAt = now();
     const printSettings = input.printSettings ?? version.printSettings;
+    const pageManifest = input.pageManifest ?? version.pageManifest;
     const contentHash = hashVersionSnapshot({
       schemaVersion: version.schemaVersion,
       templateId: version.templateId,
-      pageManifest: version.pageManifest as JsonValue,
+      pageManifest: pageManifest as JsonValue,
       fieldSnapshot: input.fields as unknown as JsonValue,
       printSettings: printSettings as JsonValue,
     });
@@ -513,6 +517,7 @@ export async function updateDraftTemplateFields(
       }))
     );
     version.fieldSnapshot = input.fields;
+    version.pageManifest = pageManifest;
     version.printSettings = printSettings;
     version.contentHash = contentHash;
     version.updatedAt = updatedAt;
@@ -710,13 +715,15 @@ export async function createInstanceFromPublishedVersion(
 export async function saveInstanceValues(
   ownerId: string | number,
   instanceId: string,
-  values: Record<string, string>
+  values: Record<string, string>,
+  expectedValuesHash?: string
 ) {
   const owner = ownerKey(ownerId);
   let result = { instanceId, valuesHash: "", updatedAt: 0 };
   await v2TransactionWithRetry(owner, async () => {
     const { instance, revision } = await v2InstanceWithRevision(owner, instanceId);
     if (!instance) throw new Error("找不到指定 Instance，或您沒有存取權限。");
+    if (expectedValuesHash && instance.valuesHash !== expectedValuesHash) throw new Error("EDIT_CONFLICT");
     const { workspace } = await readWorkspace(owner);
     const versionFields = workspace.fields.filter(
       field => field.templateVersionId === instance.templateVersionId
@@ -983,7 +990,8 @@ export async function saveTemplatePrintProfile(
 export async function updateDraftPageManifest(
   ownerId: string | number,
   versionId: string,
-  pageManifest: JsonValue
+  pageManifest: JsonValue,
+  expectedContentHash?: string
 ) {
   return mutateWorkspace(
     ownerKey(ownerId),
@@ -994,6 +1002,7 @@ export async function updateDraftPageManifest(
       );
       if (!version || version.state !== "draft")
         throw new Error("只有 Draft Version 可修改頁面。");
+      if (expectedContentHash && version.contentHash !== expectedContentHash) throw new Error("EDIT_CONFLICT");
       version.pageManifest = pageManifest;
       version.contentHash = hashVersionSnapshot({
         schemaVersion: version.schemaVersion,

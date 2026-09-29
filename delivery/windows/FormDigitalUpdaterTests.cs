@@ -69,6 +69,13 @@ internal static class FormDigitalUpdaterTests
     }
     [STAThread] private static void Main(string[] args)
     {
+        AppContext.SetSwitch("Switch.System.IO.UseLegacyPathHandling", false);
+        AppContext.SetSwitch("Switch.System.IO.BlockLongPaths", false);
+        try { Run(args); }
+        catch (Exception error) { Console.Error.WriteLine("Updater test error type: " + error.GetType().FullName); Console.Error.WriteLine(error.Message); Environment.ExitCode = 1; }
+    }
+    private static void Run(string[] args)
+    {
         CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("zh-HK");
         Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
         reference = args[0]; suite = args[1]; Directory.CreateDirectory(suite);
@@ -78,15 +85,19 @@ internal static class FormDigitalUpdaterTests
             Check(File.ReadAllText(Path.Combine(backup, "previous-dist", "index.js")) == "old program", "No old program backup");
             foreach (var file in FormDigitalUpdateEngine.Manifest().files)
                 Check(FormDigitalUpdateEngine.FileHash(FormDigitalUpdateEngine.SafePath(Path.Combine(root, "app", "dist"), file.Key)) == file.Value, "Installed file mismatch");
+            foreach (var file in FormDigitalUpdateEngine.Manifest().programFiles)
+                Check(FormDigitalUpdateEngine.FileHash(FormDigitalUpdateEngine.SafePath(root, file.Key)) == FormDigitalUpdateEngine.Manifest().files[file.Value], "Program service patch mismatch");
             Preserved(root); FormDigitalUpdateEngine.Apply(root, delegate { }); Preserved(root);
         });
-        foreach (string point in new[] { "staged", "old-moved", "new-moved" })
+        foreach (string point in new[] { "staged", "old-moved", "program-patched", "new-moved" })
         {
             string stage = point;
             Test("rollback after " + point, delegate {
                 string root = Fixture("rollback-" + stage);
                 MustFail(delegate { FormDigitalUpdateEngine.Apply(root, delegate { }, delegate(string p) { if (p == stage) throw new IOException("Injected test failure"); }); });
                 Check(File.ReadAllText(Path.Combine(root, "app", "dist", "index.js")) == "old program", "Rollback did not restore old program");
+                foreach (var file in FormDigitalUpdateEngine.Manifest().programFiles)
+                    Check(FormDigitalUpdateEngine.FileHash(FormDigitalUpdateEngine.SafePath(root, file.Key)) == FormDigitalUpdateEngine.Manifest().baseFiles[file.Key], "Rollback did not restore service code");
                 Preserved(root);
             });
         }
@@ -103,6 +114,16 @@ internal static class FormDigitalUpdaterTests
                 Check(Directory.GetFiles(Path.Combine(root, ".formdigital-update-backups"), "index.js", SearchOption.AllDirectories).Any(p => File.ReadAllText(p) == "old program"), "Recovered old files lost");
             });
         }
+        Test("recover interrupted service-file copy before compatibility check", delegate {
+            string root = Fixture("service-interrupted");
+            string pending = Path.Combine(root, ".formdigital-update-pending"); Directory.CreateDirectory(pending);
+            File.WriteAllText(Path.Combine(pending, "transaction.txt"), "FormDigital update transaction v1");
+            string service = Path.Combine(root, "app", "local-data-service.mjs");
+            File.Copy(service, Path.Combine(pending, "previous-local-data-service.mjs"));
+            File.WriteAllText(service, "interrupted partial copy");
+            FormDigitalUpdateEngine.Apply(root, delegate { }); Preserved(root);
+            Check(FormDigitalUpdateEngine.FileHash(service) == FormDigitalUpdateEngine.Manifest().files["program-patches/local-data-service.mjs"], "Service recovery/update failed");
+        });
         Test("incompatible version refused without replacement", delegate {
             string root = Fixture("incompatible"); File.AppendAllText(Path.Combine(root, "app", "package.json"), " ");
             MustFail(delegate { FormDigitalUpdateEngine.Apply(root, delegate { }); });

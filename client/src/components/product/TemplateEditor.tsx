@@ -137,8 +137,9 @@ export function TemplateEditor({
   const detailsQuery = trpc.formdigital.templates.getVersionDetails.useQuery({
     versionId,
   });
-  const saveFields = trpc.formdigital.templates.saveDraftFields.useMutation();
-  const savePages = trpc.formdigital.templates.savePages.useMutation();
+  const baselineRef = useRef<{id:string;hash?:string}>({id:versionId});
+  const saveFields = trpc.formdigital.templates.saveDraftFields.useMutation({onSuccess:(result,input)=>{if(baselineRef.current.id===input.versionId)baselineRef.current.hash=result.contentHash;}});
+  const savePages = trpc.formdigital.templates.savePages.useMutation({onSuccess:(result,input)=>{if(baselineRef.current.id===input.versionId)baselineRef.current.hash=result.contentHash;}});
   const publish = trpc.formdigital.templates.publish.useMutation();
   const clone = trpc.formdigital.templates.cloneToDraft.useMutation();
   const [cloneDialogOpen, setCloneDialogOpen] = useState(false);
@@ -305,6 +306,8 @@ export function TemplateEditor({
 
   useEffect(() => {
     if (!data) return;
+    if (dirty && baselineRef.current.id === data.version.id) return;
+    baselineRef.current = {id:data.version.id,hash:data.version.contentHash};
     const loadedFields = toCanvasFields(data.fields, data.version.pageManifest);
     setFields(loadedFields);
     setPages(pageManifestOf(data.version.pageManifest));
@@ -388,6 +391,7 @@ export function TemplateEditor({
       const write = saveQueueRef.current.then(async () => {
         await saveFields.mutateAsync({
           versionId: snapshot.versionId,
+          expectedContentHash: baselineRef.current.hash,
           fields: serializeCanvasFields(snapshot.fields, snapshot.pages),
         });
       });
@@ -405,7 +409,7 @@ export function TemplateEditor({
         toast.success(tr("Draft 已保存至 localhost Workspace", "Draft saved to the localhost Workspace"));
     } catch (error) {
       setSaveState("unsaved");
-      if (!silent)
+      if (!silent || (error instanceof Error && error.message.includes("EDIT_CONFLICT")))
         serverError(error, "保存失敗", "Save failed");
     }
   };
@@ -748,7 +752,7 @@ export function TemplateEditor({
       ...page,
       page: index + 1,
     }));
-    await savePages.mutateAsync({ versionId, pageManifest: normalized });
+    await savePages.mutateAsync({ versionId, pageManifest: normalized, expectedContentHash:baselineRef.current.hash });
     const oldToNew = new Map<number, number>();
     next.forEach((page, newIndex) => {
       const oldIndex = pages.indexOf(page);
@@ -766,6 +770,7 @@ export function TemplateEditor({
       setFields(reorderedFields);
       await saveFields.mutateAsync({
         versionId,
+        expectedContentHash:baselineRef.current.hash,
         fields: serializeCanvasFields(reorderedFields, normalized),
       });
       setActionHistory(history =>
@@ -807,6 +812,7 @@ export function TemplateEditor({
         setFields(duplicatedFields);
         await saveFields.mutateAsync({
           versionId,
+          expectedContentHash:baselineRef.current.hash,
           fields: serializeCanvasFields(duplicatedFields, normalized),
         });
         setActionHistory(history =>

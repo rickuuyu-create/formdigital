@@ -247,7 +247,7 @@ async function readFirstUsableFont(paths: string[], required: Set<number>) {
   return { bytes: null, rejected };
 }
 
-async function embedOutputFonts(pdf: PDFDocument, values: string[]): Promise<OutputFonts> {
+export async function embedOutputFonts(pdf: PDFDocument, values: string[]): Promise<OutputFonts> {
   const [sansRegular, sansBold, sansItalic, sansBoldItalic, monoRegular, monoBold, monoItalic, monoBoldItalic] = await Promise.all([
     pdf.embedFont(StandardFonts.Helvetica),
     pdf.embedFont(StandardFonts.HelveticaBold),

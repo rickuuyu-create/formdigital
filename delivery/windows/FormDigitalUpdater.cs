@@ -22,6 +22,8 @@ internal sealed class FormDigitalUpdater : Form
     }
     [STAThread] private static void Main()
     {
+        AppContext.SetSwitch("Switch.System.IO.UseLegacyPathHandling", false);
+        AppContext.SetSwitch("Switch.System.IO.BlockLongPaths", false);
         Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
         Application.Run(new FormDigitalUpdater());
     }

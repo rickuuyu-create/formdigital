@@ -3923,6 +3923,7 @@ async function createStreamingPortableBackup(owner, kind = "manual") {
     createdAt,
     files,
     workspaceV2,
+    authoritativeRecords: workspaceProjectionMarker(envelope.workspace) ? "workspace-v2" : undefined,
     summary,
   };
   const manifestBytes = Buffer.from(JSON.stringify(manifest, null, 2));
@@ -4394,7 +4395,14 @@ async function verifyExtractedPortableBackup(extraction, ownerHash) {
     // v1 arrays are intentionally empty, so compare SQLite with the retained
     // migration source when present. Older archives without a marker carry
     // their authoritative records directly in workspace.json.
-    const parityWorkspace = projectionMarker
+    // Current instances and import runs live in SQLite. The retained JSON is
+    // migration history and can legitimately predate later edits. Older
+    // archives without an explicit authority marker keep the parity check.
+    if (manifest.authoritativeRecords !== undefined && manifest.authoritativeRecords !== "workspace-v2")
+      throw new PortableArchiveStreamError("PORTABLE_MANIFEST_INVALID");
+    if (manifest.authoritativeRecords === "workspace-v2" && !projectionMarker)
+      throw new PortableArchiveStreamError("PORTABLE_WORKSPACE_V2_INVALID");
+    const parityWorkspace = manifest.authoritativeRecords === "workspace-v2" ? null : projectionMarker
       ? retainedWorkspace
       : workspaceEnvelope.workspace;
     if (

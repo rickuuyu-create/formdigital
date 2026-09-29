@@ -11,7 +11,7 @@ Form Digital 是一款在 Windows 本地运行的表格数字化程序。你可�
 这个仓库提供源代码和交付包构建工具，不包含客户表格、已填记录或预先制作的安装程序。
 
 1. 在 Windows 10 或 11 安装 Node.js 24、pnpm 10.4.1。构建工具还需要 Windows .NET Framework 的 C# 编译器。安装依赖时需要网络；构建后的程序在本地运行。
-2. 在项目文件夹运行 `pnpm install --frozen-lockfile`。
+2. 在项目文件夹运行 `pnpm install --frozen-lockfile`，再运行 `pnpm exec playwright install chromium` 安装构建时需要的文档转换引擎。
 3. 在 PowerShell 运行 `./delivery/windows/build-package.ps1 -Destination "C:\Form Digital package"`，目标必须是项目外的新文件夹。
 4. 将整个交付包文件夹复制到用户电脑，双击 `Form Digital.exe`。使用时保持启动窗口打开。
 
@@ -20,6 +20,10 @@ Form Digital 是一款在 Windows 本地运行的表格数字化程序。你可�
 数据默认保存在 `%LOCALAPPDATA%\FormDigital\Data`，与程序文件夹分开。更新程序时请保留该文件夹，并定期在“设置与备份”中创建备份。日常操作可参考[首次使用说明](delivery/windows/首次使用说明.zh-Hans.txt)。
 
 已有 Windows 交付包的用户，可参考[离线更新说明](delivery/windows/UPDATES.md)。独立更新 exe 会核对现有版本，只替换程序文件并保留旧版副本；版本不兼容时不会更新。PDF 排版修正见[更新记录](CHANGELOG.md)。
+
+## 可选的 MCP 连接
+
+在“设置与备份 → AI 连线（MCP）”启用功能，选择允许使用的文件夹和权限，再把生成的配置加入 Codex、WorkBuddy 或兼容的本地 MCP 客户端。AI 可以创建和导入模板、填写、批量处理 CSV、导出 PDF 和管理备份。MCP 默认关闭，无需 Google 登录。[连接说明、功能和验证范围](docs/MCP.md)列出了使用方法及限制。
 
 ## 开发与许可
 

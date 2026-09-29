@@ -1,7 +1,8 @@
 param(
   [Parameter(Mandatory=$true)][string]$BasePackage,
   [Parameter(Mandatory=$true)][string]$Destination,
-  [string]$Version = '2026.09.28.1'
+  [string]$Version = '2026.09.30.1',
+  [string[]]$PreviousPackages = @()
 )
 $ErrorActionPreference = 'Stop'
 if ($Version -notmatch '^[0-9]+(\.[0-9]+){2,3}$') { throw 'Use a numeric release version.' }
@@ -22,11 +23,16 @@ try {
   $env:VITE_FORMDIGITAL_LOCAL_ONLY = '1'
   & (Join-Path $project 'node_modules\.bin\vite.cmd') build --outDir (Join-Path $dist 'public')
   if ($LASTEXITCODE -ne 0) { throw 'Local-only frontend build failed.' }
-  & (Join-Path $project 'node_modules\.bin\esbuild.cmd') server/_core/index.ts --platform=node --packages=external --bundle --format=esm "--outdir=$dist"
+  & node (Join-Path $project 'scripts\build-server.mjs') $dist --with-browser
   if ($LASTEXITCODE -ne 0) { throw 'Server build failed.' }
   $revision = & git rev-parse HEAD
+  $sourceModified = [bool](& git status --porcelain --untracked-files=normal)
 } finally { $env:VITE_FORMDIGITAL_LOCAL_ONLY = $previousLocalFlag; Pop-Location }
-[ordered]@{version=$Version; sourceRevision=$revision; edition='local-offline'} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $dist 'formdigital-release.json') -Encoding utf8
+[ordered]@{version=$Version; sourceRevision=$revision; sourceModified=$sourceModified; edition='local-offline'} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $dist 'formdigital-release.json') -Encoding utf8
+$programPatch = Join-Path $dist 'program-patches'
+New-Item -ItemType Directory -Path $programPatch | Out-Null
+Copy-Item -LiteralPath (Join-Path $project 'server/formdigital/portable-archive-stream.mjs') -Destination $programPatch
+Copy-Item -LiteralPath (Join-Path $project 'local-data-service.mjs') -Destination $programPatch
 
 # Exact compatibility fingerprint of code/runtime manifests only. Never read
 # the user's config, data folder, logs, credentials or form assets.
@@ -49,11 +55,26 @@ foreach ($file in Get-ChildItem -LiteralPath $dist -File -Recurse) {
 }
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $payload = Join-Path $work 'payload.zip'
-[IO.Compression.ZipFile]::CreateFromDirectory($dist, $payload, [IO.Compression.CompressionLevel]::Optimal, $false)
+$payloadArchive = [IO.Compression.ZipFile]::Open($payload, [IO.Compression.ZipArchiveMode]::Create)
+try {
+  foreach ($file in Get-ChildItem -LiteralPath $dist -File -Recurse) {
+    $relative = $file.FullName.Substring($dist.Length + 1).Replace('\','/')
+    [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($payloadArchive, $file.FullName, $relative, [IO.Compression.CompressionLevel]::Optimal) | Out-Null
+  }
+} finally { $payloadArchive.Dispose() }
 $manifest = Join-Path $work 'update-manifest.json'
 $baseDist = Join-Path $base 'app/dist'
 $baseDistFiles = @(Get-ChildItem -LiteralPath $baseDist -File -Recurse | ForEach-Object { $_.FullName.Substring($baseDist.Length + 1).Replace('\','/') })
-[ordered]@{version=$Version; payloadSha256=(Get-FileHash -LiteralPath $payload).Hash.ToLowerInvariant(); files=$files; baseFiles=$baseFiles; baseDistFiles=$baseDistFiles} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $manifest -Encoding utf8
+foreach ($previousPackage in $PreviousPackages) {
+  $previous = (Resolve-Path -LiteralPath $previousPackage).Path
+  foreach ($relative in $baseFiles.Keys) {
+    if ((Get-FileHash -LiteralPath (Join-Path $previous $relative)).Hash.ToLowerInvariant() -ne $baseFiles[$relative]) { throw 'Previous package is not from the same runtime family.' }
+  }
+  $previousDist = Join-Path $previous 'app/dist'
+  $baseDistFiles += @(Get-ChildItem -LiteralPath $previousDist -File -Recurse | ForEach-Object { $_.FullName.Substring($previousDist.Length + 1).Replace('\','/') })
+}
+$baseDistFiles = @($baseDistFiles | Sort-Object -Unique)
+[ordered]@{version=$Version; payloadSha256=(Get-FileHash -LiteralPath $payload).Hash.ToLowerInvariant(); files=$files; baseFiles=$baseFiles; baseDistFiles=$baseDistFiles; programFiles=@{'app/server/formdigital/portable-archive-stream.mjs'='program-patches/portable-archive-stream.mjs';'app/local-data-service.mjs'='program-patches/local-data-service.mjs'}} | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $manifest -Encoding utf8
 New-Item -ItemType Directory -Path $destinationFull | Out-Null
 $exe = Join-Path $destinationFull ('Form Digital Update ' + $Version + '.exe')
 $references = @('/reference:System.Windows.Forms.dll','/reference:System.Drawing.dll','/reference:System.Web.Extensions.dll','/reference:System.IO.Compression.dll','/reference:System.IO.Compression.FileSystem.dll')

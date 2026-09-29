@@ -26,6 +26,12 @@ export async function setupVite(app: Express, server: Server) {
   });
 
   app.use(vite.middlewares);
+  app.get("/mcp-worker.html", async (req, res, next) => {
+    try {
+      const template=await fs.promises.readFile(path.resolve(import.meta.dirname,"../../client/mcp-worker.html"),"utf8");
+      res.type("html").send(await vite.transformIndexHtml(req.originalUrl,template));
+    } catch(error) { next(error); }
+  });
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
 

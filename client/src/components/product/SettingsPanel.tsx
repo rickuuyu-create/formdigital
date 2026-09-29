@@ -19,6 +19,7 @@ import { blobToBase64, downloadBlob } from "@/lib/document-files";
 import { normalizeUiLocale, useI18n } from "@/lib/i18n";
 import { trpc } from "@/lib/trpc";
 import { LOCAL_EDITION } from "@/lib/local-edition";
+import { McpSettings } from "./McpSettings";
 import type {
   FolderRecord,
   TagRecord,
@@ -295,6 +296,7 @@ export function SettingsPanel({
         </button>}
       </div>
       <div className="grid gap-4 xl:grid-cols-2">
+        {LOCAL_EDITION && <McpSettings />}
         <section className="border bg-[#fffdfa] p-5">
           <h3 className="flex items-center gap-2 text-sm font-semibold">
             <HardDrive size={16} />

@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { crc32 } from "node:zlib";
 import { createReadStream, createWriteStream } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -88,94 +89,64 @@ function portableEntrySource(entry) {
 }
 
 export async function writePortableStoredZip(outputPath, entries, options = {}) {
+  // Stored entries with unknown lengths are ambiguous when their bytes contain
+  // another ZIP (DOCX is a ZIP). Write exact sizes in local headers so readers
+  // never scan document content for a new entry or data descriptor.
   const maxArchiveBytes = options.maxArchiveBytes ?? PORTABLE_STREAM_LIMITS.archiveBytes;
-  const output = createWriteStream(outputPath, { flags: "wx" });
-  let outputError = null;
-  let pendingDrain = null;
-  let archiveBytes = 0;
-  let finalSeen = false;
-  let resolveZip;
-  let rejectZip;
-  const zipDone = new Promise((resolve, reject) => {
-    resolveZip = resolve;
-    rejectZip = reject;
-  });
-  const outputDone = new Promise((resolve, reject) => {
-    output.once("finish", resolve);
-    output.once("error", reject);
-  });
-  void zipDone.catch(() => {});
-  void outputDone.catch(() => {});
-  const zip = new Zip((error, chunk, final) => {
-    if (error) {
-      outputError = error;
-      output.destroy(error);
-      rejectZip(error);
-      return;
+  const output = await fs.open(outputPath, "wx");
+  const central = [];
+  const names = new Set();
+  let offset = 0;
+  const write = async bytes => {
+    if (offset + bytes.length > maxArchiveBytes) fail("PORTABLE_ARCHIVE_TOO_LARGE");
+    let written = 0;
+    while (written < bytes.length) {
+      const result = await output.write(bytes, written, bytes.length - written, offset + written);
+      if (!result.bytesWritten) fail("PORTABLE_ARCHIVE_WRITE_FAILED");
+      written += result.bytesWritten;
     }
-    if (chunk?.byteLength) {
-      archiveBytes += chunk.byteLength;
-      if (archiveBytes > maxArchiveBytes) {
-        outputError = new PortableArchiveStreamError("PORTABLE_ARCHIVE_TOO_LARGE");
-        output.destroy(outputError);
-        rejectZip(outputError);
-        zip.terminate();
-        return;
-      }
-      if (!output.write(Buffer.from(chunk.buffer, chunk.byteOffset, chunk.byteLength)))
-        pendingDrain = once(output, "drain").finally(() => {
-          pendingDrain = null;
-        });
-    }
-    if (final && !finalSeen) {
-      finalSeen = true;
-      output.end();
-      resolveZip();
-    }
-  });
-  const waitForOutput = async () => {
-    if (pendingDrain) await pendingDrain;
-    if (outputError) throw outputError;
+    offset += bytes.length;
   };
-
   try {
-    const writtenNames = new Set();
     for await (const entry of entries) {
-      if (
-        !entry ||
-        typeof entry.archivePath !== "string" ||
-        !isCanonicalPortableEntryName(entry.archivePath) ||
-        !Number.isSafeInteger(entry.size) ||
-        entry.size < 0
-      )
+      if (!entry || !isCanonicalPortableEntryName(entry.archivePath) || !Number.isSafeInteger(entry.size) || entry.size < 0 || entry.size > 0xffffffff)
         fail("PORTABLE_SOURCE_INVALID");
-      if (writtenNames.has(entry.archivePath))
-        fail("PORTABLE_ENTRY_DUPLICATE");
-      writtenNames.add(entry.archivePath);
-      if (writtenNames.size > PORTABLE_STREAM_LIMITS.entryCount)
-        fail("PORTABLE_ENTRY_LIMIT_EXCEEDED");
+      if (names.has(entry.archivePath)) fail("PORTABLE_ENTRY_DUPLICATE");
+      names.add(entry.archivePath);
+      if (names.size > Math.min(65535, PORTABLE_STREAM_LIMITS.entryCount)) fail("PORTABLE_ENTRY_LIMIT_EXCEEDED");
       const source = portableEntrySource(entry);
       if (source.size !== entry.size) fail("PORTABLE_SOURCE_CHANGED");
-      const zipEntry = new ZipPassThrough(entry.archivePath);
-      zip.add(zipEntry);
-      let readBytes = 0;
+      const name = Buffer.from(entry.archivePath, "utf8");
+      const header = Buffer.alloc(30);
+      header.writeUInt32LE(0x04034b50, 0); header.writeUInt16LE(20, 4); header.writeUInt16LE(0x800, 6);
+      header.writeUInt16LE(33, 12); header.writeUInt32LE(entry.size, 18); header.writeUInt32LE(entry.size, 22); header.writeUInt16LE(name.length, 26);
+      const localOffset = offset;
+      await write(header); await write(name);
+      let readBytes = 0, checksum = 0;
       for await (const chunk of source.chunks) {
         readBytes += chunk.byteLength;
         if (readBytes > entry.size) fail("PORTABLE_SOURCE_CHANGED");
-        zipEntry.push(new Uint8Array(chunk.buffer, chunk.byteOffset, chunk.byteLength), false);
-        await waitForOutput();
+        checksum = crc32(chunk, checksum);
+        await write(chunk);
       }
       if (readBytes !== entry.size) fail("PORTABLE_SOURCE_CHANGED");
-      zipEntry.push(new Uint8Array(0), true);
-      await waitForOutput();
+      const crc = Buffer.alloc(4); crc.writeUInt32LE(checksum);
+      await output.write(crc, 0, 4, localOffset + 14);
+      const record = Buffer.alloc(46);
+      record.writeUInt32LE(0x02014b50, 0); record.writeUInt16LE(20, 4); record.writeUInt16LE(20, 6); record.writeUInt16LE(0x800, 8);
+      record.writeUInt16LE(33, 14); record.writeUInt32LE(checksum, 16); record.writeUInt32LE(entry.size, 20); record.writeUInt32LE(entry.size, 24);
+      record.writeUInt16LE(name.length, 28); record.writeUInt32LE(localOffset, 42);
+      central.push(record, name);
     }
-    zip.end();
-    await zipDone;
-    await outputDone;
-    return Object.freeze({ archiveBytes });
+    const centralOffset = offset;
+    for (const bytes of central) await write(bytes);
+    const end = Buffer.alloc(22);
+    end.writeUInt32LE(0x06054b50, 0); end.writeUInt16LE(names.size, 8); end.writeUInt16LE(names.size, 10);
+    end.writeUInt32LE(offset - centralOffset, 12); end.writeUInt32LE(centralOffset, 16);
+    await write(end); await output.sync(); await output.close();
+    return Object.freeze({ archiveBytes: offset });
   } catch (error) {
-    zip.terminate();
-    output.destroy();
+    await output.close().catch(() => {});
     await fs.rm(outputPath, { force: true }).catch(() => {});
     if (error instanceof PortableArchiveStreamError) throw error;
     fail("PORTABLE_ARCHIVE_WRITE_FAILED");

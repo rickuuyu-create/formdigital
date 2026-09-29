@@ -14,6 +14,7 @@ internal sealed class UpdateManifest
     public Dictionary<string, string> files { get; set; }
     public Dictionary<string, string> baseFiles { get; set; }
     public string[] baseDistFiles { get; set; }
+    public Dictionary<string, string> programFiles { get; set; }
 }
 
 internal static class FormDigitalUpdateEngine
@@ -51,7 +52,9 @@ internal static class FormDigitalUpdateEngine
         foreach (var file in manifest.baseFiles)
         {
             string target = SafePath(root, file.Key);
-            if (!File.Exists(target) || FileHash(target) != file.Value) throw new IOException("This package version is not compatible with this update. No program files were replaced.");
+            string installedHash = File.Exists(target) ? FileHash(target) : "";
+            bool alreadyPatched = manifest.programFiles != null && manifest.programFiles.ContainsKey(file.Key) && manifest.files[manifest.programFiles[file.Key]] == installedHash;
+            if (installedHash != file.Value && !alreadyPatched) throw new IOException("This package version is not compatible with this update. No program files were replaced.");
         }
     }
     internal static void EnsureStopped(string root)
@@ -111,6 +114,10 @@ internal static class FormDigitalUpdateEngine
             throw new IOException("An unrecognized pending-update folder exists. Contact the maintainer.");
         string backup = SafePath(pending, "previous-dist");
         string dist = SafePath(root, "app/dist");
+        string previousPortable = SafePath(pending, "previous-portable-archive-stream.mjs");
+        if (File.Exists(previousPortable)) File.Copy(previousPortable, SafePath(root, "app/server/formdigital/portable-archive-stream.mjs"), true);
+        string previousService = SafePath(pending, "previous-local-data-service.mjs");
+        if (File.Exists(previousService)) File.Copy(previousService, SafePath(root, "app/local-data-service.mjs"), true);
         if (Directory.Exists(backup))
         {
             if (Directory.Exists(dist)) Directory.Move(dist, SafePath(pending, "recovered-new-dist-" + Guid.NewGuid().ToString("N")));
@@ -123,7 +130,6 @@ internal static class FormDigitalUpdateEngine
     {
         root = Path.GetFullPath(root);
         var manifest = Manifest();
-        VerifyBase(root, manifest);
         EnsureStopped(root);
         string pending = SafePath(root, ".formdigital-update-pending");
         // A per-package file lock also protects command-line/maintenance users.
@@ -131,6 +137,7 @@ internal static class FormDigitalUpdateEngine
         using (var updateLock = new FileStream(lockPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
         {
             Recover(root, pending);
+            VerifyBase(root, manifest);
             VerifyProgramDirectory(SafePath(root, "app/dist"), manifest);
             Directory.CreateDirectory(pending);
             File.WriteAllText(SafePath(pending, "transaction.txt"), "FormDigital update transaction v1");
@@ -166,6 +173,18 @@ internal static class FormDigitalUpdateEngine
                 Directory.Move(dist, old);
                 if (checkpoint != null) checkpoint("old-moved");
                 Directory.Move(staged, dist);
+                if (manifest.programFiles != null) foreach (var patch in manifest.programFiles)
+                {
+                    // Explicit program-code allowlist: never update settings or data.
+                    bool portable = patch.Key == "app/server/formdigital/portable-archive-stream.mjs" && patch.Value == "program-patches/portable-archive-stream.mjs";
+                    bool service = patch.Key == "app/local-data-service.mjs" && patch.Value == "program-patches/local-data-service.mjs";
+                    if (!portable && !service) throw new IOException("Unsupported program patch.");
+                    string target = SafePath(root, patch.Key);
+                    File.Copy(target, SafePath(pending, portable ? "previous-portable-archive-stream.mjs" : "previous-local-data-service.mjs"), false);
+                    File.Copy(SafePath(dist, patch.Value), target, true);
+                    if (FileHash(target) != manifest.files[patch.Value]) throw new IOException("Program patch verification failed.");
+                    if (checkpoint != null) checkpoint("program-patched");
+                }
                 if (checkpoint != null) checkpoint("new-moved");
                 foreach (var item in manifest.files)
                     if (FileHash(SafePath(dist, item.Key)) != item.Value) throw new IOException("Installed files failed verification.");

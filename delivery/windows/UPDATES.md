@@ -1,10 +1,10 @@
 # Offline Windows updates
 
-An existing local Windows package can receive a small, standalone update executable. It contains the new program files; the customer's computer does not need an internet connection, Node installation or package manager to apply it.
+An existing local Windows package can receive a standalone update executable. It contains the new program files; the customer's computer does not need an internet connection, Node installation or package manager to apply it. Version 2026.09.30.1 also includes the offline Chromium engine used for MCP document conversion, so this update is larger than earlier layout-only fixes.
 
 Save your work and close the Form Digital launcher first. Run the update executable. It looks beside itself and in the usual Desktop package locations. If it cannot find the package, select the folder containing `Form Digital.exe`, `app` and `runtime`. When the window says the update is complete, close it and reopen the usual launcher. Refresh the browser and export new PDFs to see layout fixes.
 
-The updater replaces `app/dist` only. It does not read or change the local data configuration or the forms folder. It keeps the previous program under `.formdigital-update-backups`. A failed replacement restores the previous directory; an interrupted replacement is recovered on the next attempt. Keep these backup folders if an update fails. The original package's `SHA256SUMS.txt` describes the original build; each update verifies its own embedded file manifest and writes its release details inside `app/dist/formdigital-release.json`.
+The updater replaces `app/dist` and two explicitly listed program files: `app/local-data-service.mjs` and `app/server/formdigital/portable-archive-stream.mjs`. These include the backup fixes needed for nested DOCX files and current database records. It does not read or change the local data configuration or the forms folder. It keeps the previous program under `.formdigital-update-backups`. A failed replacement restores the old directory and service files; an interrupted replacement is recovered on the next attempt. Keep these backup folders if an update fails. The original package's `SHA256SUMS.txt` describes the original build; each update verifies its own embedded file manifest and writes its release details inside `app/dist/formdigital-release.json`.
 
 The update refuses packages with different runtime or service fingerprints. This is a compatibility check, not a digital signature. Builds made by this repository are unsigned unless the distributor signs them separately. A PDF reader may reflow editable fields after editing; exported appearances are verified before distribution.
 
@@ -13,10 +13,10 @@ The update refuses packages with different runtime or service fingerprints. This
 Use the exact previously distributed package as the compatibility reference. Do not point the builder at customer data.
 
 ```powershell
-./delivery/windows/build-updater.ps1 -BasePackage "C:\Existing Form Digital package" -Destination "C:\Form Digital update" -Version "2026.09.28.1"
+./delivery/windows/build-updater.ps1 -BasePackage "C:\Existing Form Digital package" -Destination "C:\Form Digital update" -Version "2026.09.30.1"
 ```
 
-This checks that runtime dependencies have not changed, builds the local-only interface and server, embeds a compressed payload, and compiles the updater with the Windows .NET Framework C# compiler. The output folder must be new and outside the source and reference package. Runtime or service changes require a full package or a separately tested update path.
+Install the pinned dependencies and Playwright Chromium before building. The builder checks that existing runtime dependencies match, builds the local-only interface and server, includes the MCP SDK and conversion engine, embeds a compressed payload, and compiles the updater with the Windows .NET Framework C# compiler. The output folder must be new and outside the source and reference package. `-PreviousPackages` accepts older distributed program copies from the same runtime family so their frontend filenames are recognized. Changes outside the explicit program allowlist require a full package or a separately tested update path.
 
 Run the regression tests against the build evidence folder reported by the builder:
 
@@ -25,6 +25,16 @@ Run the regression tests against the build evidence folder reported by the build
 ```
 
 The test creates a separate program copy and synthetic data. It checks replacement, rollback, interrupted updates, compatibility refusals, data retention and both updater window outcomes. Run `node delivery/windows/test-local-edition.mjs "tmp\update-check\Complete package" --direct-runtime` for the updated package's no-login form-to-PDF workflow. Never use real customer data for these checks.
+
+Test DOCX import against the updated production package as well:
+
+```powershell
+node --import tsx delivery/windows/test-docx-import.mjs "tmp\update-check\Complete package" chromium
+```
+
+Repeat with `firefox` and `webkit` if those Playwright browsers are installed. This uses the package's real security policy and synthetic text/table and three-page image documents, with OCR on and off. It saves and reads the pages back, checks that the embedded image survives, and verifies that remote connections remain blocked. Run these package tests sequentially because they use the same isolated ports.
+
+Run `node --import tsx delivery/windows/test-mcp.mjs "ABSOLUTE/PATH/TO/app/dist" "ABSOLUTE/PATH/TO/app"` for the optional MCP tools, both transports, OCR jobs, concurrency, local approvals and output tests. See [MCP setup](../../docs/MCP.md). Pass an absolute package path to the standalone local-edition smoke test.
 
 ## 繁體中文
 

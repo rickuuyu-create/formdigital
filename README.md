@@ -11,7 +11,7 @@ The local edition runs on your computer through `localhost`. It needs no Google 
 This repository contains source code and a Windows package builder. It does not contain customer forms, completed records or a prebuilt installer.
 
 1. On Windows 10 or 11, install Node.js 24 and pnpm 10.4.1. The package builder also uses the Windows .NET Framework C# compiler. An internet connection is needed to install build dependencies; the resulting app runs locally.
-2. From the repository folder, run `pnpm install --frozen-lockfile`.
+2. From the repository folder, run `pnpm install --frozen-lockfile`, then `pnpm exec playwright install chromium` for the bundled document converter.
 3. In PowerShell, run `./delivery/windows/build-package.ps1 -Destination "C:\Form Digital package"`. Choose a new destination outside this repository.
 4. Copy the entire package folder to the Windows computer and double-click `Form Digital.exe`. Keep the launcher window open while using the site.
 
@@ -20,6 +20,10 @@ The launcher opens `http://localhost:3210/`. On first use, the guide points to *
 Your data is stored under `%LOCALAPPDATA%\FormDigital\Data` by default. It is outside the program folder, so replacing the program does not replace your forms. Back it up regularly in **Settings & Backup**. See [the Windows quick guide](delivery/windows/首次使用說明.txt) for everyday use.
 
 Already have a Windows package? See [offline updates](delivery/windows/UPDATES.md) for the standalone updater and [recent changes](CHANGELOG.md) for the PDF layout fixes. Updates are checked against the package they were built for; an incompatible package is left unchanged.
+
+## Optional MCP tools
+
+The local edition can connect to Codex, WorkBuddy or another compatible local MCP client. Enable **AI connections (MCP)** in Settings & Backup, choose allowed folders and permissions, then copy the generated client configuration. The tools support template creation and import, filling, batch CSV, PDF output and data maintenance. MCP starts off and does not require Google sign-in. See [connection instructions, capabilities and tested limits](docs/MCP.md).
 
 ## Development
 

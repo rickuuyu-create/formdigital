@@ -308,12 +308,14 @@ export const appRouter = router({
             versionId: z.string().min(1).max(52),
             fields: z.array(fieldDraftSchema).max(MAX_VERSION_FIELDS),
             printSettings: jsonValueSchema.optional(),
+            expectedContentHash: z.string().length(64).optional(),
           })
         )
         .mutation(({ ctx, input }) =>
           updateDraftTemplateFields(ctx.user.id, input.versionId, {
             fields: input.fields as never,
             printSettings: input.printSettings as never,
+            expectedContentHash: input.expectedContentHash,
           })
         ),
       cloneToDraft: protectedProcedure
@@ -373,13 +375,15 @@ export const appRouter = router({
           z.object({
             versionId: z.string().min(1),
             pageManifest: jsonValueSchema,
+            expectedContentHash: z.string().length(64).optional(),
           })
         )
         .mutation(({ ctx, input }) =>
           updateDraftPageManifest(
             ctx.user.id,
             input.versionId,
-            input.pageManifest as never
+            input.pageManifest as never,
+            input.expectedContentHash
           )
         ),
       delete: protectedProcedure
@@ -423,10 +427,11 @@ export const appRouter = router({
           z.object({
             instanceId: z.string().min(1).max(52),
             values: z.record(z.string(), z.string().max(10000)),
+            expectedValuesHash: z.string().length(64).optional(),
           })
         )
         .mutation(({ ctx, input }) =>
-          saveInstanceValues(ctx.user.id, input.instanceId, input.values)
+          saveInstanceValues(ctx.user.id, input.instanceId, input.values, input.expectedValuesHash)
         ),
       clone: protectedProcedure
         .input(
