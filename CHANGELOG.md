@@ -1,5 +1,21 @@
 # Changes
 
+## 2026.10.04.1 — MCP tutorial and Windows downloads
+
+The first-use tour now includes optional MCP setup and still ends at template practice. The settings page explains allowed folders, client configuration and a first read-only connection test. Connection and approval controls have visible button styling. Tutorials are available in Traditional Chinese, Simplified Chinese and English.
+
+The Windows updater handles deep paths for staging, recovery and backups. This cumulative version includes the earlier DOCX image import and PDF text layout fixes. GitHub Releases provides a full Windows ZIP for new users and an update EXE for existing installations.
+
+Validation of the application: 12 DOCX import cases across Chromium, Firefox and WebKit; 37 MCP integration checks; no-login form-to-PDF workflow. The updater passed 18 checks for each of two compatible prior package versions, including recovery on long paths. Physical printing and arbitrary Word layouts still need document-specific review.
+
+### 繁體中文
+
+新增三語 MCP 連接教學，說明文件資料夾、AI 客戶端設定及測試連線的方法；首次導覽仍會指向範本實習。建立連線和批准操作現在有清楚的按鈕樣式。更新器亦修正 Windows 深層路徑問題。新用戶可下載完整 Windows ZIP，已有程式的用戶下載更新 EXE，兩者包含相同的 DOCX、PDF 及 MCP 修復。
+
+### 简体中文
+
+新增三语 MCP 连接教程，说明文件夹、AI 客户端配置及测试连接的方法；首次导览仍会指向模板实习。创建连接和批准操作现在有清晰的按钮样式。更新器也修复了 Windows 深层路径问题。新用户可下载完整 Windows ZIP，已有程序的用户下载更新 EXE，两者包含相同的 DOCX、PDF 和 MCP 修复。
+
 ## 2026-09-30 — optional local MCP
 
 The local Windows edition now offers optional MCP connections, off by default. Authorized local clients can import or design templates, work with all 12 field types, fill individual records or CSV batches, inspect page previews and export PDFs. Versioned edits reject stale changes; local approval protects destructive maintenance. The website retains unsaved input when an agent edits the same record. Both stdio and Streamable HTTP are available without Google sign-in. [Setup and limitations](docs/MCP.md).

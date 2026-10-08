@@ -8,7 +8,11 @@ Form Digital 是一款在 Windows 本地运行的表格数字化程序。你可�
 
 ## 在 Windows 上使用
 
-这个仓库提供源代码和交付包构建工具，不包含客户表格、已填记录或预先制作的安装程序。
+到 [GitHub Releases](https://github.com/rickuuyu-create/formdigital/releases/latest) 下载 Windows 版。新用户选择完整的 **FormDigital-Windows-x64-*.zip**，解压整个文件夹，再双击 `Form Digital.exe`。包内已有 Node、OCR 和文档转换引擎，无需另外安装。已有程序的用户选择 **FormDigital-Update-*.exe**，先保存工作并关闭 Form Digital，再更新原程序文件夹。
+
+请下载上述程序文件；GitHub 自动附加的 Source code 是源代码。两份下载提供相同版本的功能。
+
+如果需要自行从源代码构建：
 
 1. 在 Windows 10 或 11 安装 Node.js 24、pnpm 10.4.1。构建工具还需要 Windows .NET Framework 的 C# 编译器。安装依赖时需要网络；构建后的程序在本地运行。
 2. 在项目文件夹运行 `pnpm install --frozen-lockfile`，再运行 `pnpm exec playwright install chromium` 安装构建时需要的文档转换引擎。

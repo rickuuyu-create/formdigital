@@ -8,7 +8,11 @@ The local edition runs on your computer through `localhost`. It needs no Google 
 
 ## Try the local edition
 
-This repository contains source code and a Windows package builder. It does not contain customer forms, completed records or a prebuilt installer.
+Download the Windows edition from [GitHub Releases](https://github.com/rickuuyu-create/formdigital/releases/latest). New users should choose the full **FormDigital-Windows-x64-*.zip**, extract the entire folder, and double-click `Form Digital.exe`. Node.js, OCR and the document conversion engine are included. Existing users should choose **FormDigital-Update-*.exe**, save their work and close Form Digital before updating their current program folder.
+
+Use the release assets, rather than GitHub's automatically generated source archives, to run the app. Both downloads include the same application features.
+
+To build a package from source yourself:
 
 1. On Windows 10 or 11, install Node.js 24 and pnpm 10.4.1. The package builder also uses the Windows .NET Framework C# compiler. An internet connection is needed to install build dependencies; the resulting app runs locally.
 2. From the repository folder, run `pnpm install --frozen-lockfile`, then `pnpm exec playwright install chromium` for the bundled document converter.
