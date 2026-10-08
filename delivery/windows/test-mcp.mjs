@@ -611,7 +611,22 @@ try {
     await section.getByRole("heading", { name: heading, exact: true }).waitFor();
     await saved;
   }
+  const guide = page.getByTestId("mcp-guide");
+  await guide.locator("summary").click();
+  await guide.screenshot({ path: path.join(root, "mcp-guide.png") });
+  await guide.locator("summary").click();
+  const createConnection = section.getByRole("button", { name: "建立連線設定", exact: true });
+  assert.equal(await createConnection.evaluate(el => getComputedStyle(el).backgroundColor), "rgb(16, 42, 67)");
+  await section.getByLabel("新增連線名稱").fill("WorkBuddy UI test");
+  await createConnection.click();
+  await section.getByText("WorkBuddy / MCP (stdio JSON)", { exact: true }).click();
+  const details = section.locator("details").filter({ has: page.getByText("WorkBuddy / MCP (stdio JSON)", { exact: true }) });
+  const clientConfig = JSON.parse(await details.locator("pre").textContent());
+  assert.ok(clientConfig.mcpServers.formdigital.command);
+  assert.ok(clientConfig.mcpServers.formdigital.args.includes("--connection"));
+  await section.getByRole("button", { name: "關閉設定資訊" }).click();
   await section.screenshot({ path: path.join(root, "mcp-settings.png") });
+  ok("visible connection button generates client configuration and tutorial opens");
   ok("MCP settings in Traditional Chinese, Simplified Chinese and English");
   await page.goto(`${origin}/?view=fill&instance=${instanceId}`);
   const nameInput = page.locator('input:visible, textarea:visible');

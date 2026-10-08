@@ -68,7 +68,16 @@ $baseDistFiles = @(Get-ChildItem -LiteralPath $baseDist -File -Recurse | ForEach
 foreach ($previousPackage in $PreviousPackages) {
   $previous = (Resolve-Path -LiteralPath $previousPackage).Path
   foreach ($relative in $baseFiles.Keys) {
-    if ((Get-FileHash -LiteralPath (Join-Path $previous $relative)).Hash.ToLowerInvariant() -ne $baseFiles[$relative]) { throw 'Previous package is not from the same runtime family.' }
+    $previousHash = (Get-FileHash -LiteralPath (Join-Path $previous $relative)).Hash.ToLowerInvariant()
+    # Match the installer's compatibility check: an earlier cumulative update
+    # may already contain the exact service patches shipped in this payload.
+    $patchRelative = switch ($relative) {
+      'app/local-data-service.mjs' { 'program-patches/local-data-service.mjs' }
+      'app/server/formdigital/portable-archive-stream.mjs' { 'program-patches/portable-archive-stream.mjs' }
+      default { $null }
+    }
+    $alreadyPatched = $patchRelative -and $previousHash -eq $files[$patchRelative]
+    if ($previousHash -ne $baseFiles[$relative] -and !$alreadyPatched) { throw 'Previous package is not from the same runtime family.' }
   }
   $previousDist = Join-Path $previous 'app/dist'
   $baseDistFiles += @(Get-ChildItem -LiteralPath $previousDist -File -Recurse | ForEach-Object { $_.FullName.Substring($previousDist.Length + 1).Replace('\','/') })

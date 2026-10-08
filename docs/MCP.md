@@ -45,7 +45,7 @@ Existing product limits still apply: fixed page sizes, bounded arithmetic and SU
 
 MCP additionally limits source files to 50 MB each, 20 files per import request, eight pending conversions and one active conversion, with a ten-minute conversion deadline. Preview size is bounded. The first release stops new writes at 10,000 operation records; it does not silently discard retry history. Keep its private `mcp` folder when maintaining an installation. Contact the maintainer before clearing history: deleting it can remove replay protection and undo snapshots.
 
-The tested protocol implementation uses official `@modelcontextprotocol/sdk` **1.31.0**, through stdio and Streamable HTTP. The integration suite exercises both against the updated Windows package. The WorkBuddy desktop connection screen and a natural-language end-to-end run in every agent are **not verified**; client versions differ. Do not describe this as a guarantee for every MCP application or for old SSE-only clients.
+The tested protocol implementation uses official `@modelcontextprotocol/sdk` **1.31.0**, through stdio and Streamable HTTP. The integration suite exercises both against the updated Windows package. On 2026-10-04 the user reported a successful WorkBuddy desktop PDF-to-draft run, with the agent correcting missed and mislabelled fields. This is user-reported evidence, not an independent compatibility test of every agent; client versions differ. Do not describe this as a guarantee for every MCP application or for old SSE-only clients.
 
 ## Development and verification
 
@@ -59,7 +59,7 @@ Run `node --import tsx delivery/windows/test-mcp.mjs "PATH/TO/app/dist" "PATH/TO
 
 使用時保持 Form Digital 開啟。可以先請 AI 建立一份測試表，再試填和輸出 PDF。匯入文件後仍要核對欄位，正式版本不能直接改；先複製成新草稿。刪除、還原等操作要回網站批准，刪除前先備份。停用 MCP 或撤銷個別連線後，原網站仍可正常使用。
 
-本機處理不等於雲端 AI 不會收到資料。連線資訊請勿公開。WorkBuddy 桌面版仍需接上實機確認；這次已驗證標準 MCP 的 stdio、HTTP 和網站三語設定流程。
+本機處理不等於雲端 AI 不會收到資料。連線資訊請勿公開。2026-10-04 用戶已回報 WorkBuddy 實機透過聊天匯入 PDF 並建立草稿成功；辨識後仍需修正欄位。這是用戶實測回報，並非所有 AI 客戶端的相容保證。
 
 ## 简体中文
 
@@ -67,4 +67,8 @@ Run `node --import tsx delivery/windows/test-mcp.mjs "PATH/TO/app/dist" "PATH/TO
 
 使用时保持 Form Digital 打开。可以先让 AI 创建测试表，再试填并导出 PDF。导入后仍需核对字段；正式版本需要先复制成新草稿才能修改。删除、恢复等操作需要回到网站批准，删除前先备份。关闭 MCP 或撤销连接后，原网站仍可正常使用。
 
-本地处理不代表云端 AI 不会收到数据。请勿公开连接信息。WorkBuddy 桌面版仍需实际连接确认；本次已验证标准 MCP 的 stdio、HTTP 和网站三语设置流程。
+本地处理不代表云端 AI 不会收到数据。请勿公开连接信息。2026-10-04 用户已反馈 WorkBuddy 实机通过聊天导入 PDF 并创建草稿成功；识别后仍需修正字段。这是用户实测反馈，并非所有 AI 客户端的兼容保证。
+
+## First connection walkthrough
+
+Offline guides: [English](../delivery/windows/First-use-guide.en.txt), [繁體中文](../delivery/windows/首次使用說明.txt), [简体中文](../delivery/windows/首次使用说明.zh-Hans.txt). The same walkthrough is available inside Settings → AI connections, including allowed folders, client configuration, a read-only connection test and draft review.

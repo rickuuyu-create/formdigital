@@ -94,10 +94,12 @@ internal static class FormDigitalUpdaterTests
             string stage = point;
             Test("rollback after " + point, delegate {
                 string root = Fixture("rollback-" + stage);
+                var originalHashes = FormDigitalUpdateEngine.Manifest().programFiles.Keys.ToDictionary(
+                    key => key, key => FormDigitalUpdateEngine.FileHash(FormDigitalUpdateEngine.SafePath(root, key)));
                 MustFail(delegate { FormDigitalUpdateEngine.Apply(root, delegate { }, delegate(string p) { if (p == stage) throw new IOException("Injected test failure"); }); });
                 Check(File.ReadAllText(Path.Combine(root, "app", "dist", "index.js")) == "old program", "Rollback did not restore old program");
                 foreach (var file in FormDigitalUpdateEngine.Manifest().programFiles)
-                    Check(FormDigitalUpdateEngine.FileHash(FormDigitalUpdateEngine.SafePath(root, file.Key)) == FormDigitalUpdateEngine.Manifest().baseFiles[file.Key], "Rollback did not restore service code");
+                    Check(FormDigitalUpdateEngine.FileHash(FormDigitalUpdateEngine.SafePath(root, file.Key)) == originalHashes[file.Key], "Rollback did not restore the installed service code");
                 Preserved(root);
             });
         }

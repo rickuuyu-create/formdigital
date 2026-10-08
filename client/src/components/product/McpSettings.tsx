@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { LoaderCircle, PlugZap } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
 export function McpSettings() {
@@ -67,6 +68,58 @@ export function McpSettings() {
       <h3 className="font-semibold">
         {tr("AI 連線（MCP）", "AI connections (MCP)")}
       </h3>
+      <details className="my-3 border p-3" data-testid="mcp-guide">
+        <summary className="cursor-pointer font-semibold">
+          {tr(
+            "第一次連接？按這裡看教學",
+            "Connecting for the first time? Open the guide"
+          )}
+        </summary>
+        <ol className="list-decimal pl-5 space-y-3 mt-3 text-sm">
+          <li>
+            {tr(
+              "保持 Form Digital 開啟，再勾選下方的「啟用 MCP」。聊天會在你自己的 Codex 或 WorkBuddy 裡進行。",
+              "Keep Form Digital open and select Enable MCP below. You will chat in your own Codex or WorkBuddy app."
+            )}
+          </li>
+          <li>
+            {tr(
+              "在電腦建立一個放表格的資料夾，把 PDF、DOCX 或圖片放進去。將該資料夾的完整路徑填在下方，再按「儲存資料夾」。附加文件到 AI 聊天不代表 Form Digital 已能讀取它；如文件在 Downloads，請把文件複製到允許的資料夾，或把 Downloads 加入清單。",
+              "Create a folder for your forms and put your PDF, DOCX or images there. Enter its full path below and choose Save folders. Attaching a file to an AI chat does not give Form Digital access to it. If it is in Downloads, copy it to an allowed folder or add Downloads to the list."
+            )}
+          </li>
+          <li>
+            {tr(
+              "輸入連線名稱，例如 WorkBuddy，選擇「讀取、製表及填寫、輸出」，再按「建立連線設定」。每個 AI 客戶端請建立自己的連線。",
+              "Name the connection, for example WorkBuddy, select Read, Create and fill, and Export, then choose Create connection settings. Create a separate connection for each AI client."
+            )}
+          </li>
+          <li>
+            {tr(
+              "在 WorkBuddy 的 MCP 設定加入畫面提供的 stdio JSON；若它要求逐項填寫，將 command 填入啟動指令，將 args 依原順序逐個加入引數。Codex 可使用 TOML，或同樣填入 command 和 args。請使用這部電腦剛產生的設定，保留原有的其他 MCP 項目。",
+              "In WorkBuddy's MCP settings, add the generated stdio JSON. If the client uses separate fields, use command as the launch command and add each args item in order as an argument. Codex can use the TOML configuration or the same command and args. Use the settings generated on this computer and keep your other MCP entries."
+            )}
+          </li>
+          <li>
+            {tr(
+              "在 AI 客戶端儲存並啟用連線，按其提示重新載入工具。先說：「請透過 Form Digital MCP 列出現有範本，不要修改資料。」能讀到清單（即使清單是空的），才代表連接成功。只在本頁看到連線名稱，仍未代表 AI 已連上。",
+              "Save and enable the connection in your AI client, and reload its tools if prompted. First ask: “Use Form Digital MCP to list existing templates without changing data.” A successful list, even an empty one, confirms the connection. A connection name on this page alone does not confirm it."
+            )}
+          </li>
+          <li>
+            {tr(
+              "接著試說：「建立一份採購申請表，包含姓名、日期及採購明細，先給我預覽，不要發佈。」也可提供允許資料夾內的文件完整路徑，請 AI 匯入成草稿。",
+              "Then try: “Create a purchase request form with a name, date and purchase items. Show me a preview without publishing.” To import an existing document, give the agent its full path inside an allowed folder and ask for a draft."
+            )}
+          </li>
+        </ol>
+        <p className="mt-3 text-sm">
+          {tr(
+            "匯入後請逐頁核對欄位名稱、位置、單選／多選及表格。自動辨識可能漏掉方框或誤讀標籤；「0 個驗證問題」不代表辨識完全正確。確認草稿後再發佈，填寫後打開 PDF 檢查。舊式 .doc 請先另存為 .docx 或 PDF。",
+            "After import, check field names, positions, single/multiple choices and tables on each page. Detection may miss boxes or misread labels; zero validation issues does not mean detection is correct. Review the draft before publishing and inspect the exported PDF after filling. Save older .doc files as .docx or PDF first."
+          )}
+        </p>
+      </details>
       <p className="my-2 text-sm">
         {tr(
           "讓同一部電腦上的 Codex、WorkBuddy 或其他 MCP 客戶端建立範本、填寫及輸出。預設關閉，不需要 Google 登入。使用時請保持 Form Digital 開啟。",
@@ -162,7 +215,9 @@ export function McpSettings() {
                 ))}
               </div>
               <button
-                className="btn-primary"
+                type="button"
+                className="btn-ink cursor-pointer rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d9573b] disabled:cursor-not-allowed disabled:opacity-50"
+                aria-busy={busy}
                 disabled={busy || !name.trim() || !permissions.length}
                 onClick={async () => {
                   const value = await update({
@@ -173,7 +228,18 @@ export function McpSettings() {
                   if (value) setConnection(value);
                 }}
               >
-                {tr("建立連線設定", "Create connection settings")}
+                {busy ? (
+                  <LoaderCircle
+                    size={16}
+                    aria-hidden="true"
+                    className="animate-spin"
+                  />
+                ) : (
+                  <PlugZap size={16} aria-hidden="true" />
+                )}
+                {busy
+                  ? tr("處理中…", "Working…")
+                  : tr("建立連線設定", "Create connection settings")}
               </button>
             </div>
           )}
@@ -256,7 +322,7 @@ export function McpSettings() {
                   {o.state === "awaiting-approval" && (
                     <div className="flex gap-2">
                       <button
-                        className="btn-primary"
+                        className="btn-ink"
                         disabled={busy}
                         onClick={() =>
                           void update({

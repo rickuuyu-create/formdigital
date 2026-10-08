@@ -13,3 +13,17 @@ The local edition accepts connections only from localhost on this computer. It i
 The package does not include templates, completed forms or secrets from the development computer. Back up existing data before migrating it with the site's backup and restore tools.
 
 The computer needs Windows 10/11 and a default browser. Node.js is included in the package.
+
+Create forms through Codex or WorkBuddy (optional)
+------------------------------------------------
+1. Keep Form Digital open. In Settings & Backup → AI connections (MCP), open the first-connection guide and enable MCP.
+2. Create a folder for your PDF, DOCX or images. Add its full path to the allowed folders and choose Save folders. Chat attachments are not automatically accessible on this computer; copy files from Downloads into an allowed folder if needed.
+3. Name the connection, for example WorkBuddy. Select Read, Create and fill, and Export, then click the dark Create connection settings button.
+4. Add the generated stdio JSON in WorkBuddy's MCP settings. For separate fields, command is the launch command and each args item is a separate argument, in order. Codex can use TOML or the same command and args. Preserve other MCP entries and keep credentials private. Generate settings on each computer; do not copy another person's paths.
+5. Save and enable the connection in the AI client, then reload tools if prompted. Ask: “Use Form Digital MCP to list existing templates without changing data.” A successful list, even an empty one, confirms connection. A name on the website only means authorization was created.
+6. Try: “Create a purchase request form with a name, date and purchase items. Show a preview without publishing.” To import a document, give its full path inside an allowed folder.
+
+Detection only suggests draft fields. It may misread names, miss choices or confuse single and multiple selection. Even with zero validation issues, review positions, types and choice marks on every page before publishing. After filling, open the PDF and check text, wrapping, images and page count.
+Word import supports .docx, including documents with images. Save older .doc files as .docx or PDF first. Compare complex Word layouts with the original. Output is PDF.
+
+Everyday form work does not require Backup and manage permission. Deletion, restore and bulk overwrites require approval on the website. You can revoke a connection or disable MCP. A cloud AI may receive the data and tool results you give it; running Form Digital locally does not make the AI conversation offline.

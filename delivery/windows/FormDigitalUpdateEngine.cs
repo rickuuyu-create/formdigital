@@ -59,6 +59,10 @@ internal static class FormDigitalUpdateEngine
     }
     internal static void EnsureStopped(string root)
     {
+        // Process.MainModule reports ordinary paths, while file operations use
+        // the extended Windows syntax to support nested runtime/backup files.
+        if (root.StartsWith(@"\\?\UNC\", StringComparison.OrdinalIgnoreCase)) root = @"\\" + root.Substring(8);
+        else if (root.StartsWith(@"\\?\", StringComparison.Ordinal)) root = root.Substring(4);
         string prefix = Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
         foreach (Process process in Process.GetProcesses()) using (process)
         {
@@ -129,6 +133,8 @@ internal static class FormDigitalUpdateEngine
     internal static string Apply(string root, Action<string> progress, Action<string> checkpoint = null)
     {
         root = Path.GetFullPath(root);
+        if (!root.StartsWith(@"\\?\", StringComparison.Ordinal))
+            root = root.StartsWith(@"\\", StringComparison.Ordinal) ? @"\\?\UNC\" + root.Substring(2) : @"\\?\" + root;
         var manifest = Manifest();
         EnsureStopped(root);
         string pending = SafePath(root, ".formdigital-update-pending");

@@ -124,7 +124,16 @@ const steps: Step[] = [
   {
     page: "settings",
     target: '[data-tour="tour-settings"]',
-    title: ["⑨ 忘記操作時，回來重播", "⑨ Replay whenever you need help"],
+    title: ["⑨ 用聊天建立和填寫表格", "⑨ Create and fill forms through chat"],
+    body: [
+      "想用 Codex 或 WorkBuddy 製表，可在設定頁的「AI 連線（MCP）」展開「第一次連接？按這裡看教學」。教學會帶你設定文件資料夾、建立連線，再到 AI 客戶端測試。這是選用功能；導覽不會替你啟用它。",
+      "To use Codex or WorkBuddy, open the first-connection guide under AI connections (MCP) in Settings. It explains allowed folders, connection settings and a first test in your AI client. This is optional; the tour does not enable MCP for you.",
+    ],
+  },
+  {
+    page: "settings",
+    target: '[data-tour="tour-settings"]',
+    title: ["⑩ 忘記操作時，回來重播", "⑩ Replay whenever you need help"],
     body: [
       "「重新播放教學」會立即重看。「下次進入時自動播放」適合把這個瀏覽器交給新同事。觀看紀錄只記在這個瀏覽器，不會改動表格資料。",
       "Replay tour starts it immediately. Play automatically next time is useful before handing this browser to a colleague. The viewing preference stays in this browser and does not change your form data.",
@@ -137,14 +146,14 @@ const steps: Step[] = [
       "You are ready to try your first form",
     ],
     body: [
-      "按「完成」回到工作總覽，再按「匯入 PDF／DOCX／圖片」選擇原表。記住這個順序：匯入 → 確認欄位 → 發佈 → 填寫 → 檢查輸出。",
-      "Choose Finish to return to the dashboard, then Import PDF, DOCX, or images to choose an original form. Follow this order: import → review fields → publish → fill → check the export.",
+      "建立表格的順序是：匯入 → 確認欄位 → 發佈 → 填寫 → 檢查輸出。按「下一步」認識範本實習入口；完成教學後，也可在工作總覽按「匯入 PDF／DOCX／圖片」選擇自己的原表。",
+      "To create a form: import → review fields → publish → fill → check the export. Choose Next to find template practice. After the tour, you can also choose Import PDF, DOCX, or images on the dashboard to use your own form.",
     ],
   },
   {
     page: "dashboard",
     target: '[data-tour="practice-start"]',
-    title: ["⑩ 建議先做範本實習", "⑩ Start with template practice"],
+    title: ["⑪ 建議先做範本實習", "⑪ Start with template practice"],
     body: [
       "第一次建立範本，建議先按「開始新的範本實習」。它會用八頁示範原表，帶你逐步練習欄位、單選與多選圈選、表格及公式；熟悉後再匯入自己的表格。按「完成」後，這個按鈕會保持選取，供你開始練習。",
       "If this is your first template, choose Start a new practice. The eight-page example walks you through fields, single- and multiple-choice marks, tables, and formulas. Then import your own form. After Finish, this button will be focused so you can start.",

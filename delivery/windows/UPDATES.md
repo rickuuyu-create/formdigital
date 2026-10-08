@@ -13,7 +13,7 @@ The update refuses packages with different runtime or service fingerprints. This
 Use the exact previously distributed package as the compatibility reference. Do not point the builder at customer data.
 
 ```powershell
-./delivery/windows/build-updater.ps1 -BasePackage "C:\Existing Form Digital package" -Destination "C:\Form Digital update" -Version "2026.09.30.1"
+./delivery/windows/build-updater.ps1 -BasePackage "C:\Existing Form Digital package" -Destination "C:\Form Digital update" -Version "2026.10.04.1"
 ```
 
 Install the pinned dependencies and Playwright Chromium before building. The builder checks that existing runtime dependencies match, builds the local-only interface and server, includes the MCP SDK and conversion engine, embeds a compressed payload, and compiles the updater with the Windows .NET Framework C# compiler. The output folder must be new and outside the source and reference package. `-PreviousPackages` accepts older distributed program copies from the same runtime family so their frontend filenames are recognized. Changes outside the explicit program allowlist require a full package or a separately tested update path.
@@ -24,7 +24,7 @@ Run the regression tests against the build evidence folder reported by the build
 ./delivery/windows/test-updater.ps1 -BuildEvidence "tmp\updater-build-..." -BasePackage "C:\Existing Form Digital package" -TestRoot "tmp\update-check"
 ```
 
-The test creates a separate program copy and synthetic data. It checks replacement, rollback, interrupted updates, compatibility refusals, data retention and both updater window outcomes. Run `node delivery/windows/test-local-edition.mjs "tmp\update-check\Complete package" --direct-runtime` for the updated package's no-login form-to-PDF workflow. Never use real customer data for these checks.
+The test creates a separate program copy and synthetic data. It checks replacement, rollback, interrupted updates, compatibility refusals, data retention and both updater window outcomes. Run `node delivery/windows/test-local-edition.mjs "C:\absolute-path\update-check\Complete package" --direct-runtime` for the updated package's no-login form-to-PDF workflow. Never use real customer data for these checks.
 
 Test DOCX import against the updated production package as well:
 
@@ -47,3 +47,9 @@ Run `node --import tsx delivery/windows/test-mcp.mjs "ABSOLUTE/PATH/TO/app/dist"
 先保存工作并关闭 Form Digital 启动窗口，再运行更新 exe。如果找不到程序，选择内有 `Form Digital.exe`、`app` 和 `runtime` 的原交付包文件夹。看到“更新完成，可以关闭此窗口”后，重新打开原程序并刷新网页。旧 PDF 不会自动改变，请重新导出。
 
 更新文件已包含所需的新程序，不用联网下载。工具只替换程序文件，保留数据和设置，并留下旧程序副本。如果更新失败，请保留文件夹并把窗口信息交给维护人员。
+
+## 2026.10.04.1 release checks
+
+This cumulative release includes the three-language MCP connection tutorial, the connection button styling, and the earlier DOCX, PDF layout and MCP fixes. Repeat the updater suite using both the original compatible program reference and a previously MCP-updated package. Include a long test root so staged runtime paths exceed 260 characters: the engine uses extended Windows paths, including recovery and backup operations. Rollback assertions compare with the actually installed service hashes, which may already contain an earlier patch.
+
+The first-use tour now has 13 steps and still ends at template practice. The production smoke test opens the MCP tutorial in each interface language before running the full form-to-PDF workflow.

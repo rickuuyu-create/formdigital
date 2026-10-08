@@ -73,11 +73,12 @@ for (const mobile of [false, true]) {
     await page.goto("/");
     // Onboarding can hide before its final preferences request is dispatched.
     // Start the tour's read-only observation only after that existing write settles.
-    const onboardingSaved = page.waitForResponse(response =>
-      response.url().includes('/api/trpc/formdigital.preferences') &&
-      response.request().method() === 'POST' &&
-      (response.request().postData() ?? '').includes('onboardingCompleted') &&
-      response.status() === 200
+    const onboardingSaved = page.waitForResponse(
+      response =>
+        response.url().includes("/api/trpc/formdigital.preferences") &&
+        response.request().method() === "POST" &&
+        (response.request().postData() ?? "").includes("onboardingCompleted") &&
+        response.status() === 200
     );
     await completeOnboarding(page, { keepTour: true });
     await onboardingSaved;
@@ -139,6 +140,7 @@ for (const mobile of [false, true]) {
       ["calibrate", '[data-tour-page="calibrate"] h2'],
       ["settings", '[data-tour="backup-create"]'],
       ["settings", '[data-tour="tour-settings"]'],
+      ["settings", '[data-tour="tour-settings"]'],
     ];
     for (const [i, [view, selector]] of destinations.entries()) {
       await guide(page).getByRole("button", { name: "下一步" }).click();
@@ -153,10 +155,10 @@ for (const mobile of [false, true]) {
         });
     }
     await guide(page).getByRole("button", { name: "下一步" }).click();
-    await expect(guide(page)).toHaveAttribute("data-step", "11");
+    await expect(guide(page)).toHaveAttribute("data-step", "12");
     await checkCard(page);
     await guide(page).getByRole("button", { name: "下一步" }).click();
-    await expect(guide(page)).toHaveAttribute("data-step", "12");
+    await expect(guide(page)).toHaveAttribute("data-step", "13");
     await expect(guide(page)).toContainText("開始新的範本實習");
     await checkCard(page, '[data-tour="practice-start"]');
     await guide(page)
