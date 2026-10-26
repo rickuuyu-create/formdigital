@@ -6,6 +6,41 @@ Form Digital 是在 Windows 本機使用的表格數碼化程式。你可以匯�
 
 本機版透過 `localhost` 運行，不需要 Google 登入，也不會把表格上傳到 Form Digital 的網上服務。OCR 只提供建議；掃描品質和表格格式各有不同，欄位名稱與位置仍要人手核對。
 
+## 看看實際操作
+
+以下畫面使用虛構採購申請表，在 Windows 發行版中實際操作。GIF 節錄了關鍵步驟，省略等候時間。畫面採用英文介面，程式亦支援繁體及簡體中文。
+
+**匯入 PDF，再設定欄位位置**
+
+![匯入 PDF、檢查頁面，再命名及調整欄位位置](docs/media/import-and-edit.gif)
+
+**填寫資料，再連同原表輸出 PDF**
+
+![填寫採購申請、計算各項金額，再輸出 PDF](docs/media/fill-and-export.gif)
+
+<details>
+<summary>查看四張畫面及示範 PDF</summary>
+
+**範本編輯器：** 在原文件上放置欄位，調整大小及設定。
+
+![使用虛構採購表的範本編輯器](docs/media/template-editor.png)
+
+**圈選及公式：** 單選申請優先次序，多選所需設備；各行金額按數量乘單價計算。
+
+![已填表格的單選、多選圈選及自動計算金額](docs/media/choices-and-formulas.png)
+
+**PDF 輸出：** 下圖由實際輸出的檔案轉成圖片。[開啟示範 PDF](docs/media/sample-purchase-request.pdf)。
+
+<img src="docs/media/pdf-output.png" alt="實際輸出的採購申請 PDF，包含填寫資料及計算金額" width="600">
+
+**MCP 教學：** 連接自己的相容 AI Agent 後，在該 Agent 聊天即可要求建立草稿、填寫或輸出。[查看連接說明](docs/MCP.md)。
+
+![程式內的 Codex、WorkBuddy 及相容 MCP 客戶端首次連接教學](docs/media/mcp-guide.png)
+
+</details>
+
+[示範素材的拍攝方式](docs/media/README.md)
+
 ## 在 Windows 使用
 
 到 [GitHub Releases](https://github.com/rickuuyu-create/formdigital/releases/latest) 下載 Windows 版。新用戶選完整的 **FormDigital-Windows-x64-*.zip**，將整個資料夾解壓，再雙擊 `Form Digital.exe`。包內已有 Node、OCR 及文件轉換引擎，毋須另行安裝。已有程式的用戶選 **FormDigital-Update-*.exe**，先儲存工作並關閉 Form Digital，再更新原有程式資料夾。

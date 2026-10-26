@@ -6,6 +6,41 @@ Form Digital is a local Windows app for turning paper forms and PDF or Office do
 
 The local edition runs on your computer through `localhost`. It needs no Google sign-in and does not upload your forms to a hosted Form Digital service. OCR suggestions still need a person to check field names and positions, especially for scanned or complex forms.
 
+## See it in action
+
+These captures use a fictional purchase request in the Windows release. The GIFs show selected steps from real app use, with waiting time omitted. Screenshots use the English interface; Traditional and Simplified Chinese are also available.
+
+**Import a PDF and place a field**
+
+![Import a PDF, review the page, then name and position a field](docs/media/import-and-edit.gif)
+
+**Fill a record and export the original form with answers**
+
+![Fill a purchase request, calculate line amounts and export a PDF](docs/media/fill-and-export.gif)
+
+<details>
+<summary>View four screenshots and the sample PDF</summary>
+
+**Template editor:** position fields over the source document and adjust their settings.
+
+![Template editor with a synthetic purchase request](docs/media/template-editor.png)
+
+**Choices and formulas:** circle a single priority and multiple equipment choices. Quantity × unit price calculates each line amount.
+
+![Filled form with single and multiple choice circles and calculated amounts](docs/media/choices-and-formulas.png)
+
+**PDF output:** this is a rendering of the exported file. [Open the sample PDF](docs/media/sample-purchase-request.pdf).
+
+<img src="docs/media/pdf-output.png" alt="Actual exported purchase request PDF with answers and calculated amounts" width="600">
+
+**MCP guide:** connect your own compatible AI client, then chat there to create a draft, fill data or export. [Read the connection guide](docs/MCP.md).
+
+![Built-in first-connection guide for Codex, WorkBuddy and compatible MCP clients](docs/media/mcp-guide.png)
+
+</details>
+
+[How these demos were captured](docs/media/README.md)
+
 ## Try the local edition
 
 Download the Windows edition from [GitHub Releases](https://github.com/rickuuyu-create/formdigital/releases/latest). New users should choose the full **FormDigital-Windows-x64-*.zip**, extract the entire folder, and double-click `Form Digital.exe`. Node.js, OCR and the document conversion engine are included. Existing users should choose **FormDigital-Update-*.exe**, save their work and close Form Digital before updating their current program folder.
